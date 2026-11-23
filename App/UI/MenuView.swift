@@ -49,6 +49,15 @@ struct MenuView: View {
                 Text("Raccourci : ⌃⌥G")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                Menu("Bu ailleurs…") {
+                    ForEach([150, 250, 330, 500], id: \.self) { amount in
+                        Button("\(amount) mL") { model.recordDrink(amount, source: .elsewhere) }
+                    }
+                }
+                .fixedSize()
+                Text("Compte dans ton total, pas dans la dette.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 if model.cameraMonitor.isBusy {
                     Text("Visio en cours : la sécheresse attend.")
                         .font(.caption)
@@ -59,6 +68,7 @@ struct MenuView: View {
             Divider()
 
             HStack {
+                Button("Historique…") { model.openHistory() }
                 Button("Réglages…") { model.openSettings() }
                 Spacer()
                 if model.protectionEnabled {

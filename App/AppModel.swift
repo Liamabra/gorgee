@@ -1,5 +1,6 @@
 import AppKit
 import GorgeeCore
+import UniformTypeIdentifiers
 import Observation
 import OSLog
 
@@ -11,6 +12,8 @@ final class AppModel {
     private(set) var now = Date.now
     private(set) var isUserActive = true
     private(set) var protectionEnabled: Bool
+    /// Toutes les gorgées, chargées depuis le journal puis complétées au fil de l'eau.
+    private(set) var drinkEvents: [DrinkEvent]
 
     /// Debug : accélère l'accumulation de la dette.
     var timeScale: Double = 1 {
@@ -45,6 +48,7 @@ final class AppModel {
         engine = HydrationEngine(settings: settings, state: state)
         hasProfile = savedSettings != nil
         protectionEnabled = Protection.isEnabled
+        drinkEvents = (try? files.drinks.readAll()) ?? []
         #if DEBUG
         if let scale = DebugOptions.timeScale { timeScale = scale }
         #endif
@@ -110,10 +114,40 @@ final class AppModel {
     func recordDrink(_ milliliters: Int, source: DrinkSource) {
         let before = displaySeverity
         let event = engine.recordDrink(milliliters, source: source, at: .now)
-        do { try files.drinks.append(event) } catch { log.error("Gorgée non journalisée : \(error)") }
+        journal(event)
         persistState()
         now = .now
-        overlay.wash(from: before, to: displaySeverity)
+        // « Bu ailleurs » ne rembourse pas la dette : pas d'eau qui ruisselle.
+        if source != .elsewhere {
+            overlay.wash(from: before, to: displaySeverity)
+        }
+    }
+
+    private func journal(_ event: DrinkEvent) {
+        drinkEvents.append(event)
+        do { try files.drinks.append(event) } catch { log.error("Gorgée non journalisée : \(error)") }
+    }
+
+    func openHistory() {
+        HistoryWindowController.shared.show(model: self)
+    }
+
+    /// Exporte l'historique en CSV ou en JSON, à l'endroit choisi par l'utilisateur.
+    func exportHistory(as type: UTType) {
+        let panel = NSSavePanel()
+        panel.allowedContentTypes = [type]
+        panel.nameFieldStringValue = type == .json ? "gorgee.json" : "gorgee.csv"
+        panel.level = NSWindow.Level(rawValue: OverlayController.level.rawValue + 2)
+        NSApp.activate()
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        do {
+            let data = type == .json
+                ? try DrinkExport.json(drinkEvents)
+                : Data(DrinkExport.csv(drinkEvents).utf8)
+            try data.write(to: url, options: .atomic)
+        } catch {
+            log.error("Export impossible : \(error)")
+        }
     }
 
     func startProof() {
@@ -132,7 +166,7 @@ final class AppModel {
         let before = displaySeverity
         let cameraAvailable = CameraController.hasAllowedCamera && proof.status != .cameraDenied
         guard let event = engine.declareManually(milliliters, at: .now, cameraAvailable: cameraAvailable) else { return }
-        do { try files.drinks.append(event) } catch { log.error("Gorgée non journalisée : \(error)") }
+        journal(event)
         persistState()
         now = .now
         overlay.wash(from: before, to: displaySeverity)

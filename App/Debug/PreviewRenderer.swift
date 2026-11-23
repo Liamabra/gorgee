@@ -27,7 +27,38 @@ enum PreviewRenderer {
             else { continue }
             try? png.write(to: directory.appending(path: "drought-\(Int(severity * 100)).png"))
         }
+        renderInterface(to: directory)
         exit(0)
+    }
+
+    /// Menu et historique, alimentés par 30 jours de gorgées d'exemple dans un dossier temporaire.
+    private static func renderInterface(to directory: URL) {
+        let data = FileManager.default.temporaryDirectory.appending(path: "gorgee-preview-\(UUID().uuidString)")
+        let log = DrinkLog(url: data.appending(path: "drinks.jsonl"))
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: .now)
+        for offset in 0..<30 {
+            guard let day = calendar.date(byAdding: .day, value: -offset, to: today) else { continue }
+            let glasses = offset == 0 ? 4 : 5 + (offset * 7) % 5
+            for glass in 0..<glasses {
+                let date = day.addingTimeInterval(Double(9 + glass * 2) * 3600)
+                try? log.append(DrinkEvent(date: date, milliliters: glass.isMultiple(of: 3) ? 330 : 250, source: .camera))
+            }
+        }
+        let model = AppModel(files: AppFiles(directory: data))
+        let views: [(String, AnyView)] = [
+            ("history", AnyView(HistoryView(model: model).background(Color(nsColor: .windowBackgroundColor)))),
+            ("menu", AnyView(MenuView(model: model).background(Color(nsColor: .windowBackgroundColor)))),
+        ]
+        for (name, view) in views {
+            let renderer = ImageRenderer(content: view)
+            renderer.scale = 2
+            guard let image = renderer.cgImage,
+                  let png = NSBitmapImageRep(cgImage: image).representation(using: .png, properties: [:])
+            else { continue }
+            try? png.write(to: directory.appending(path: "\(name).png"))
+        }
+        try? FileManager.default.removeItem(at: data)
     }
 }
 

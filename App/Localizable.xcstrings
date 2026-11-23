@@ -1,6 +1,22 @@
 {
   "sourceLanguage" : "fr",
   "strings" : {
+    "%@ sur %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ of %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ sur %@"
+          }
+        }
+      }
+    },
     "%lld h" : {
       "localizations" : {
         "en" : {
@@ -13,6 +29,62 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld h"
+          }
+        }
+      }
+    },
+    "%lld jours d'affilée" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld day in a row"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld days in a row"
+                }
+              }
+            }
+          }
+        },
+        "fr" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld jour d'affilée"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld jours d'affilée"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld mL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld mL"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld mL"
           }
         }
       }
@@ -49,6 +121,38 @@
         }
       }
     },
+    "30 jours" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 days"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 jours"
+          }
+        }
+      }
+    },
+    "7 jours" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7 days"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7 jours"
+          }
+        }
+      }
+    },
     "Apple Intelligence indisponible : seul le geste est vérifié." : {
       "localizations" : {
         "en" : {
@@ -81,6 +185,22 @@
         }
       }
     },
+    "Aujourd'hui" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aujourd'hui"
+          }
+        }
+      }
+    },
     "Bois, tête inclinée" : {
       "localizations" : {
         "en" : {
@@ -93,6 +213,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bois, tête inclinée"
+          }
+        }
+      }
+    },
+    "Bu ailleurs…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drank elsewhere…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu ailleurs…"
           }
         }
       }
@@ -157,6 +293,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ce verre est vide."
+          }
+        }
+      }
+    },
+    "Compte dans ton total, pas dans la dette." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Counts toward your total, not your debt."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compte dans ton total, pas dans la dette."
+          }
+        }
+      }
+    },
+    "Contenance de ton verre : %lld mL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your glass holds: %lld mL"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contenance de ton verre : %lld mL"
           }
         }
       }
@@ -237,6 +405,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "En pause jusqu'à %@"
+          }
+        }
+      }
+    },
+    "Exporter en CSV…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export as CSV…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exporter en CSV…"
+          }
+        }
+      }
+    },
+    "Exporter en JSON…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export as JSON…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exporter en JSON…"
           }
         }
       }
@@ -349,6 +549,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gorgée validée : %lld mL. L'eau revient !"
+          }
+        }
+      }
+    },
+    "Historique de Gorgée" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gorgée History"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historique de Gorgée"
+          }
+        }
+      }
+    },
+    "Historique…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "History…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historique…"
           }
         }
       }
@@ -513,6 +745,38 @@
         }
       }
     },
+    "Jour" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jour"
+          }
+        }
+      }
+    },
+    "L" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L"
+          }
+        }
+      }
+    },
     "La caméra démarre…" : {
       "localizations" : {
         "en" : {
@@ -529,6 +793,22 @@
         }
       }
     },
+    "Litres" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liters"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Litres"
+          }
+        }
+      }
+    },
     "Montre ton verre d'eau à la caméra" : {
       "localizations" : {
         "en" : {
@@ -541,6 +821,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Montre ton verre d'eau à la caméra"
+          }
+        }
+      }
+    },
+    "Objectif" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Goal"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objectif"
           }
         }
       }
@@ -705,6 +1001,22 @@
         }
       }
     },
+    "Période" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Period"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Période"
+          }
+        }
+      }
+    },
     "Quitter" : {
       "localizations" : {
         "en" : {
@@ -865,6 +1177,22 @@
         }
       }
     },
+    "Récipient" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Container"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Récipient"
+          }
+        }
+      }
+    },
     "Réessayer" : {
       "localizations" : {
         "en" : {
@@ -941,6 +1269,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sécheresse"
+          }
+        }
+      }
+    },
+    "Série" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Streak"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Série"
+          }
+        }
+      }
+    },
+    "Une gorgée vérifiée crédite la baisse du niveau, au moins un quart de cette contenance." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A verified sip credits the drop in level, at least a quarter of this capacity."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une gorgée vérifiée crédite la baisse du niveau, au moins un quart de cette contenance."
           }
         }
       }

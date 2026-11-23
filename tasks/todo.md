@@ -56,8 +56,20 @@ Plan validé : `~/.claude/plans/j-ai-envie-de-cr-er-snug-bee-of-c17f7770-8f82-4b
 - [ ] Vérification avec les clips de l'utilisateur (voir `Fixtures/README.md`)
 - [ ] Vérification en direct par l'utilisateur : eau validée, verre vide et café refusés, FaceTime suspend la sécheresse
 
-## M3 — Quantité · M4 — Historique · M5 — Widget
-- [ ] (à détailler au début de chaque jalon)
+## M3 — Quantité
+- [x] Contenance réglable (lecture tolérante des anciens réglages) (TDD)
+- [x] Volume crédité = contenance × baisse du niveau, au moins un quart de verre (TDD)
+- [ ] Justesse du niveau mesurée sur les clips de l'utilisateur (repli prévu : classifieur Create ML, sinon forfait)
+
+## M4 — Historique
+- [x] Totaux par jour, série de jours réussis (TDD)
+- [x] Export CSV (heure locale) et JSON (TDD)
+- [x] Fenêtre Historique : aujourd'hui, série, courbes 7 / 30 jours avec ligne d'objectif, export
+- [x] « Bu ailleurs… » dans le menu (compte dans le total, pas dans la dette)
+- [x] Textes FR/EN (84 chaînes, pluriel pour la série)
+
+## M5 — Widget
+- [ ] Bloqué : il faut une identité de signature (App Group). À faire après l'ajout de l'identifiant Apple dans Xcode.
 
 ## Journal des décisions
 
@@ -72,4 +84,7 @@ Plan validé : `~/.claude/plans/j-ai-envie-de-cr-er-snug-bee-of-c17f7770-8f82-4b
 - Ruling: un refus « aucun récipient vu » ne compte pas dans les 3 refus — sinon mimer ou laisser expirer la caméra automatique débloquerait la déclaration manuelle — coût si faux : un utilisateur sans verre visible doit réessayer davantage.
 - Ruling: en M2, chaque gorgée vérifiée crédite 250 mL fixes — la mesure du niveau arrive en M3 — coût si faux : crédit inexact jusqu'à M3.
 - Ruling: sans Apple Intelligence, preuve par le geste seul (tout récipient accepté) — repli prévu au plan — coût si faux : le cola passe sur ces Mac-là.
+- Ruling: sans baisse de niveau visible, une gorgée vérifiée crédite un quart de la contenance — le modèle lit mal le niveau sur photos — coût si faux : sous-crédit jusqu'à ce que les clips permettent d'affiner.
+- Ruling: la série se mesure avec l'objectif actuel, pas celui de chaque jour passé — l'objectif change rarement — coût si faux : une série recalculée après un changement de poids.
+- Ruling: le widget (M5) est reporté — il exige une identité de signature pour l'App Group, absente — coût si faux : aucun, la jauge de la barre de menus couvre le besoin.
 - Ruling: le temps où l'app est morte compte comme actif (plafonné à 60 s par tick) — tuer l'app ne doit pas effacer la dette — coût si faux : quelques mL de trop après un plantage.
