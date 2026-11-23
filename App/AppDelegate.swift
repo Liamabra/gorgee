@@ -31,6 +31,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             SettingsWindowController.shared.show(model: model)
         }
 
+        hotKeys.append(HotKey(keyCode: kVK_ANSI_G, modifiers: controlKey | optionKey) { [model] in
+            model.toggleProofPanel()
+        })
+
         #if DEBUG
         let emergency = HotKey(keyCode: kVK_ANSI_D, modifiers: controlKey | optionKey | shiftKey) { [model] in
             model.overlayHiddenForDebug.toggle()

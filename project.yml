@@ -27,6 +27,12 @@ targets:
     dependencies:
       - package: GorgeeKit
         product: GorgeeCore
+      - package: GorgeeKit
+        product: GorgeeDetection
+    entitlements:
+      path: App/Gorgee.entitlements
+      properties:
+        com.apple.security.device.camera: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.gorgee.Gorgee
@@ -36,6 +42,7 @@ targets:
         INFOPLIST_KEY_LSUIElement: YES
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.healthcare-fitness
         INFOPLIST_KEY_NSHumanReadableCopyright: "MIT"
+        INFOPLIST_KEY_NSCameraUsageDescription: "Gorgée regarde ta gorgée d'eau pour la valider. Les images restent sur ton Mac."
         SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
         SWIFT_APPROACHABLE_CONCURRENCY: YES
         ENABLE_APP_SANDBOX: NO

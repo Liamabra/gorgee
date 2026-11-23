@@ -50,7 +50,7 @@ public struct GlassJudge: Sendable {
         return model.availability == .available && model.capabilities.contains(.vision)
     }
 
-    public func judge(_ pixelBuffer: CVPixelBuffer) async throws -> ContainerVerdict {
+    public nonisolated(nonsending) func judge(_ pixelBuffer: CVPixelBuffer) async throws -> ContainerVerdict {
         let session = LanguageModelSession(model: .default, instructions: Self.instructions)
         let response = try await session.respond(
             generating: ContainerJudgement.self,

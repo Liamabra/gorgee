@@ -44,15 +44,17 @@ Plan validé : `~/.claude/plans/j-ai-envie-de-cr-er-snug-bee-of-c17f7770-8f82-4b
 ## M2 — Preuve par caméra
 - [x] Prototype Foundation Models : disponible, vision active, ~0,9 s par image ; couleur juste (eau / cola / jus), niveau non fiable sur photos web
 - [x] Prototype caméras : seule la FaceTime intégrée (`bltn`) ; pas de caméra virtuelle installée pour tester
-- [ ] Machine à états de la gorgée : montrer, boire, reposer, remontrer (TDD)
-- [ ] Refus consécutifs, déclaration manuelle payée par un joker, ancien état toujours lisible (TDD)
-- [ ] Politique caméra : intégrée, USB, Continuity ; le reste refusé (TDD)
-- [ ] Géométrie « main à la bouche + tête inclinée » (TDD)
-- [ ] Cible `GorgeeDetection` : analyse Vision d'une image, juge Foundation Models, relecture de clips
-- [ ] App : session caméra à la demande, panneau de preuve, raccourci ⌃⌥G, ouverture automatique
-- [ ] Suspension de la sécheresse pendant une visio
-- [ ] Permission caméra FR/EN + droit `device.camera` (runtime durci)
-- [ ] Vérification avec les clips de l'utilisateur
+- [x] Machine à états de la gorgée : montrer, boire, reposer, remontrer (TDD)
+- [x] Refus consécutifs, déclaration manuelle payée par un joker, ancien état toujours lisible (TDD)
+- [x] Politique caméra : intégrée, USB, Continuity ; le reste refusé (TDD)
+- [x] Géométrie « main à la bouche + tête inclinée » (TDD)
+- [x] Cible `GorgeeDetection` : analyse Vision d'une image, juge Foundation Models, relecture de clips
+- [x] App : session caméra à la demande, panneau de preuve, raccourci ⌃⌥G, ouverture automatique
+- [x] Suspension de la sécheresse pendant une visio
+- [x] Permission caméra FR/EN + droit `device.camera` (runtime durci)
+- [x] Fumée : vidéo fixe de cola → refus « liquide coloré » ; verre d'eau → accepté, attend la gorgée
+- [ ] Vérification avec les clips de l'utilisateur (voir `Fixtures/README.md`)
+- [ ] Vérification en direct par l'utilisateur : eau validée, verre vide et café refusés, FaceTime suspend la sécheresse
 
 ## M3 — Quantité · M4 — Historique · M5 — Widget
 - [ ] (à détailler au début de chaque jalon)
@@ -67,4 +69,7 @@ Plan validé : `~/.claude/plans/j-ai-envie-de-cr-er-snug-bee-of-c17f7770-8f82-4b
 - Ruling: LaunchAgent classique écrit dans `~/Library/LaunchAgents` plutôt que `SMAppService` — fonctionne sans identité de signature, testé avec `kill -9` — coût si faux : l'app apparaît comme « développeur non identifié » dans les éléments d'ouverture.
 - Ruling: protection désactivée par défaut en Debug, activée en Release — sinon chaque build relancerait l'ancienne version — coût si faux : aucun en usage réel.
 - Ruling: overlay au niveau 24 (barre de menus) et non « économiseur d'écran » — garde le menu de Gorgée et ses fenêtres au-dessus — coût si faux : les menus et panneaux système passent au-dessus de la sécheresse.
+- Ruling: un refus « aucun récipient vu » ne compte pas dans les 3 refus — sinon mimer ou laisser expirer la caméra automatique débloquerait la déclaration manuelle — coût si faux : un utilisateur sans verre visible doit réessayer davantage.
+- Ruling: en M2, chaque gorgée vérifiée crédite 250 mL fixes — la mesure du niveau arrive en M3 — coût si faux : crédit inexact jusqu'à M3.
+- Ruling: sans Apple Intelligence, preuve par le geste seul (tout récipient accepté) — repli prévu au plan — coût si faux : le cola passe sur ces Mac-là.
 - Ruling: le temps où l'app est morte compte comme actif (plafonné à 60 s par tick) — tuer l'app ne doit pas effacer la dette — coût si faux : quelques mL de trop après un plantage.

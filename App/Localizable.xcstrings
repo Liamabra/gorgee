@@ -17,6 +17,22 @@
         }
       }
     },
+    "%lld mL (1 joker)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld mL (1 joker)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld mL (1 joker)"
+          }
+        }
+      }
+    },
     "%lld mL par heure active" : {
       "localizations" : {
         "en" : {
@@ -33,6 +49,54 @@
         }
       }
     },
+    "Apple Intelligence indisponible : seul le geste est vérifié." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence unavailable: only the gesture is checked."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence indisponible : seul le geste est vérifié."
+          }
+        }
+      }
+    },
+    "Aucune caméra physique disponible. Tu peux déclarer ta gorgée contre un joker." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No physical camera available. You can declare your sip for a joker."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune caméra physique disponible. Tu peux déclarer ta gorgée contre un joker."
+          }
+        }
+      }
+    },
+    "Bois, tête inclinée" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drink, head tilted back"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bois, tête inclinée"
+          }
+        }
+      }
+    },
     "Bu aujourd'hui : %@ sur %@" : {
       "localizations" : {
         "en" : {
@@ -45,6 +109,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu aujourd'hui : %@ sur %@"
+          }
+        }
+      }
+    },
+    "Ce liquide a de la couleur : seule l'eau compte." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This drink has a color: only water counts."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce liquide a de la couleur : seule l'eau compte."
+          }
+        }
+      }
+    },
+    "Ce liquide est opaque : seule l'eau compte." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This drink is opaque: only water counts."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce liquide est opaque : seule l'eau compte."
+          }
+        }
+      }
+    },
+    "Ce verre est vide." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This glass is empty."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce verre est vide."
           }
         }
       }
@@ -145,6 +257,22 @@
         }
       }
     },
+    "Fermer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fermer"
+          }
+        }
+      }
+    },
     "Fin" : {
       "localizations" : {
         "en" : {
@@ -177,6 +305,22 @@
         }
       }
     },
+    "Gorgée n'a pas accès à la caméra. Autorise-la dans Réglages Système › Confidentialité › Caméra." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gorgée can't access the camera. Allow it in System Settings › Privacy › Camera."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gorgée n'a pas accès à la caméra. Autorise-la dans Réglages Système › Confidentialité › Caméra."
+          }
+        }
+      }
+    },
     "Gorgée se lance aussi à l'ouverture de session. Pour la désactiver, passe par « Quitter Gorgée »." : {
       "localizations" : {
         "en" : {
@@ -189,6 +333,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gorgée se lance aussi à l'ouverture de session. Pour la désactiver, passe par « Quitter Gorgée »."
+          }
+        }
+      }
+    },
+    "Gorgée validée : %lld mL. L'eau revient !" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sip verified: %lld mL. The water is back!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gorgée validée : %lld mL. L'eau revient !"
           }
         }
       }
@@ -225,6 +385,22 @@
         }
       }
     },
+    "Il faut un verre ou une bouteille transparents." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use a clear glass or a clear bottle."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il faut un verre ou une bouteille transparents."
+          }
+        }
+      }
+    },
     "Inutilisable à %lld mL" : {
       "localizations" : {
         "en" : {
@@ -241,18 +417,18 @@
         }
       }
     },
-    "J'ai bu un verre (%lld mL)" : {
+    "J'ai vraiment bu…" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "I drank a glass (%lld mL)"
+            "value" : "I really drank…"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "J'ai bu un verre (%lld mL)"
+            "value" : "J'ai vraiment bu…"
           }
         }
       }
@@ -273,6 +449,54 @@
         }
       }
     },
+    "Je ne t'ai pas vu boire. Porte le verre à ta bouche, tête inclinée." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I didn't see you drink. Bring the glass to your mouth, head tilted back."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je ne t'ai pas vu boire. Porte le verre à ta bouche, tête inclinée."
+          }
+        }
+      }
+    },
+    "Je ne vois pas de verre. Montre-le bien à la caméra." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I can't see a glass. Show it clearly to the camera."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je ne vois pas de verre. Montre-le bien à la caméra."
+          }
+        }
+      }
+    },
+    "Je ne vois pas encore de verre." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No glass in sight yet."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je ne vois pas encore de verre."
+          }
+        }
+      }
+    },
     "Jokers : %lld" : {
       "localizations" : {
         "en" : {
@@ -285,6 +509,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jokers : %lld"
+          }
+        }
+      }
+    },
+    "La caméra démarre…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starting the camera…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La caméra démarre…"
+          }
+        }
+      }
+    },
+    "Montre ton verre d'eau à la caméra" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show your glass of water to the camera"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Montre ton verre d'eau à la caméra"
           }
         }
       }
@@ -417,18 +673,34 @@
         }
       }
     },
-    "Provisoire, en attendant la preuve par caméra." : {
+    "Prouve ta gorgée" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Temporary, until camera proof arrives."
+            "value" : "Prove your sip"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Provisoire, en attendant la preuve par caméra."
+            "value" : "Prouve ta gorgée"
+          }
+        }
+      }
+    },
+    "Prouver une gorgée" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prove a sip"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prouver une gorgée"
           }
         }
       }
@@ -481,6 +753,22 @@
         }
       }
     },
+    "Raccourci : ⌃⌥G" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shortcut: ⌃⌥G"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raccourci : ⌃⌥G"
+          }
+        }
+      }
+    },
     "Recopie cette phrase pour pouvoir quitter :" : {
       "localizations" : {
         "en" : {
@@ -513,6 +801,54 @@
         }
       }
     },
+    "Remontre ton verre à la caméra après avoir bu." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show your glass to the camera again after drinking."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remontre ton verre à la caméra après avoir bu."
+          }
+        }
+      }
+    },
+    "Repose ton verre après avoir bu." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Put your glass down after drinking."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repose ton verre après avoir bu."
+          }
+        }
+      }
+    },
+    "Repose-le, puis remontre-le" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Put it down, then show it again"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repose-le, puis remontre-le"
+          }
+        }
+      }
+    },
     "Rythme" : {
       "localizations" : {
         "en" : {
@@ -525,6 +861,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rythme"
+          }
+        }
+      }
+    },
+    "Réessayer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try again"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réessayer"
           }
         }
       }
@@ -589,6 +941,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sécheresse"
+          }
+        }
+      }
+    },
+    "Visio en cours : la sécheresse attend." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video call in progress: the drought is waiting."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visio en cours : la sécheresse attend."
           }
         }
       }

@@ -42,13 +42,18 @@ struct MenuView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Button {
-                    model.recordDrink(250, source: .manual)
+                    model.showProofPanel()
                 } label: {
-                    Label("J'ai bu un verre (\(250) mL)", systemImage: "drop.fill")
+                    Label("Prouver une gorgée", systemImage: "camera")
                 }
-                Text("Provisoire, en attendant la preuve par caméra.")
+                Text("Raccourci : ⌃⌥G")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                if model.cameraMonitor.isBusy {
+                    Text("Visio en cours : la sécheresse attend.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
 
             Divider()
