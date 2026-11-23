@@ -18,7 +18,8 @@ final class ProofPanelController {
         isVisible ? close() : show()
     }
 
-    func show() {
+    /// `takeFocus` à faux pour l'ouverture automatique : on ne vole pas la frappe en cours.
+    func show(takeFocus: Bool = true) {
         let panel = self.panel ?? makePanel()
         self.panel = panel
         if let screen = NSScreen.main {
@@ -26,8 +27,8 @@ final class ProofPanelController {
             panel.setFrameTopLeftPoint(NSPoint(x: frame.midX - panel.frame.width / 2, y: frame.maxY - 12))
         }
         panel.orderFrontRegardless()
-        panel.makeKey()
-        if !model.proof.isActive, model.proof.status == .idle || isFinished {
+        if takeFocus { panel.makeKey() }
+        if !model.proof.isActive {
             model.startProof()
         }
     }
@@ -35,11 +36,6 @@ final class ProofPanelController {
     func close() {
         model.proof.cancel()
         panel?.orderOut(nil)
-    }
-
-    private var isFinished: Bool {
-        if case .finished = model.proof.status { return true }
-        return false
     }
 
     private func makePanel() -> NSPanel {
@@ -100,6 +96,9 @@ struct ProofView: View {
             HStack {
                 Button("Fermer", action: close)
                 Spacer()
+                if proof.status == .cameraDenied {
+                    Button("Ouvrir les réglages") { Self.openCameraPrivacySettings() }
+                }
                 if canRetry {
                     Button("Réessayer") { model.startProof() }
                 }
@@ -146,8 +145,16 @@ struct ProofView: View {
     }
 
     private var canRetry: Bool {
-        if case .finished(.refused) = proof.status { return true }
-        return false
+        switch proof.status {
+        case .finished(.refused), .cameraDenied, .noCamera, .judgeUnavailable: true
+        default: false
+        }
+    }
+
+    private static func openCameraPrivacySettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Camera") {
+            NSWorkspace.shared.open(url)
+        }
     }
 
     private var statusMessage: LocalizedStringKey? {
@@ -161,6 +168,8 @@ struct ProofView: View {
             return "Gorgée n'a pas accès à la caméra. Autorise-la dans Réglages Système › Confidentialité › Caméra."
         case .noCamera:
             return "Aucune caméra physique disponible. Tu peux déclarer ta gorgée contre un joker."
+        case .judgeUnavailable:
+            return "Le modèle d'Apple ne répond pas. Tu peux déclarer ta gorgée contre un joker."
         case .finished(.verified):
             return "Gorgée validée : \(proof.creditedMilliliters) mL. L'eau revient !"
         case .finished(.refused(let reason)):

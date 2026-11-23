@@ -2,7 +2,8 @@ import Foundation
 
 /// Ce qui est persisté entre deux lancements.
 public struct HydrationState: Codable, Equatable, Sendable {
-    /// Début du jour auquel se rapportent les compteurs.
+    /// Le jour auquel se rapportent les compteurs, ancré à midi : un changement de fuseau
+    /// de quelques heures ne le fait pas glisser sur la veille ou le lendemain.
     public var day: Date
     public var debtML: Double
     public var drankTodayML: Int
@@ -11,11 +12,14 @@ public struct HydrationState: Codable, Equatable, Sendable {
     public var lastTick: Date?
     /// Preuves refusées d'affilée ; à 3, on peut déclarer à la main contre un joker.
     public var consecutiveRefusals: Int
+    /// Réglages modifiés aujourd'hui, appliqués au prochain jour : on ne desserre pas l'étau en pleine sécheresse.
+    public var pendingSettings: HydrationSettings?
 
-    public static func fresh(day: Date, jokers: Int) -> HydrationState {
-        HydrationState(
-            day: day, debtML: 0, drankTodayML: 0, jokersLeft: jokers,
-            pausedUntil: nil, lastTick: nil, consecutiveRefusals: 0
+    public static func fresh(for date: Date, calendar: Calendar, jokers: Int) -> HydrationState {
+        let noon = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: date) ?? date
+        return HydrationState(
+            day: noon, debtML: 0, drankTodayML: 0, jokersLeft: jokers,
+            pausedUntil: nil, lastTick: nil, consecutiveRefusals: 0, pendingSettings: nil
         )
     }
 }
@@ -31,6 +35,7 @@ extension HydrationState {
         pausedUntil = try container.decodeIfPresent(Date.self, forKey: .pausedUntil)
         lastTick = try container.decodeIfPresent(Date.self, forKey: .lastTick)
         consecutiveRefusals = try container.decodeIfPresent(Int.self, forKey: .consecutiveRefusals) ?? 0
+        pendingSettings = try container.decodeIfPresent(HydrationSettings.self, forKey: .pendingSettings)
     }
 }
 
@@ -61,7 +66,15 @@ public struct HydrationEngine: Sendable {
         guard let last = state.lastTick, now > last, isActive, isInWindow(now) else { return }
         let elapsed = min(now.timeIntervalSince(last), Self.maxTickStep) * timeScale
         let accrued = settings.accrualPerHourML * elapsed / 3600
-        state.debtML = min(settings.unusableML, state.debtML + accrued)
+        // Plafond pour la dette qui monte ; une dette déjà au-dessus (seuil abaissé) n'est jamais rabotée.
+        if state.debtML < settings.unusableML {
+            state.debtML = min(settings.unusableML, state.debtML + accrued)
+        }
+    }
+
+    /// Les nouveaux réglages prennent effet au prochain jour.
+    public mutating func scheduleSettings(_ newSettings: HydrationSettings) {
+        state.pendingSettings = newSettings == settings ? nil : newSettings
     }
 
     /// Une gorgée vérifiée (caméra) ou déclarée (joker) rembourse la dette ; « bu ailleurs » non.
@@ -132,6 +145,7 @@ public struct HydrationEngine: Sendable {
     /// Chaque matin, on repart de zéro ; la nuit ne compte pas comme du temps actif.
     private mutating func rollOverIfNeeded(_ now: Date) {
         guard !calendar.isDate(state.day, inSameDayAs: now) else { return }
-        state = .fresh(day: calendar.startOfDay(for: now), jokers: settings.jokersPerDay)
+        if let pending = state.pendingSettings { settings = pending }
+        state = .fresh(for: now, calendar: calendar, jokers: settings.jokersPerDay)
     }
 }

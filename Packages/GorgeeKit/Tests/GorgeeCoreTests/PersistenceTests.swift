@@ -13,7 +13,7 @@ struct PersistenceTests {
     @Test("L'état se relit tel qu'il a été écrit")
     func stateRoundTrips() throws {
         let store = JSONFileStore<HydrationState>(url: directory.appending(path: "state.json"))
-        var state = HydrationState.fresh(day: TestClock.calendar.startOfDay(for: TestClock.at(9)), jokers: 1)
+        var state = HydrationState.fresh(for: TestClock.at(9), calendar: TestClock.calendar, jokers: 1)
         state.debtML = 432.5
         state.pausedUntil = TestClock.at(9, 15)
         state.lastTick = TestClock.at(9, 3, 27)

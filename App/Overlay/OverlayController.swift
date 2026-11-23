@@ -8,6 +8,8 @@ import SwiftUI
 final class OverlayState {
     var severity: Double = 0
     var wash: Wash?
+    /// La poussière ne s'anime que si quelqu'un regarde : pas d'animation pendant l'absence.
+    var animating = true
 }
 
 /// L'eau qui ruisselle après une gorgée, de l'ancienne sévérité à la nouvelle.
@@ -47,6 +49,11 @@ final class OverlayController {
         guard severity != state.severity else { return }
         state.severity = severity
         syncWindows()
+    }
+
+    func setAnimating(_ animating: Bool) {
+        guard state.animating != animating else { return }
+        state.animating = animating
     }
 
     func wash(from: Double, to: Double) {

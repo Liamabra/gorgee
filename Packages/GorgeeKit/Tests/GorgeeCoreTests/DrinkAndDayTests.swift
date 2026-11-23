@@ -33,7 +33,7 @@ struct DrinkTests {
 @Suite("Changement de jour")
 struct DayRolloverTests {
     static func yesterdayEngine() -> HydrationEngine {
-        var state = HydrationState.fresh(day: TestClock.calendar.startOfDay(for: TestClock.at(12, day: 22)), jokers: 0)
+        var state = HydrationState.fresh(for: TestClock.at(12, day: 22), calendar: TestClock.calendar, jokers: 0)
         state.debtML = 600
         state.drankTodayML = 1500
         state.lastTick = TestClock.at(21, 59, day: 22)
@@ -44,7 +44,7 @@ struct DayRolloverTests {
     func tickOnNewDayResets() {
         var engine = Self.yesterdayEngine()
         engine.tick(now: TestClock.at(9), isActive: true)
-        #expect(engine.state.day == TestClock.calendar.startOfDay(for: TestClock.at(9)))
+        #expect(TestClock.calendar.isDate(engine.state.day, inSameDayAs: TestClock.at(9)))
         #expect(engine.state.debtML == 0)
         #expect(engine.state.drankTodayML == 0)
         #expect(engine.state.jokersLeft == 2)

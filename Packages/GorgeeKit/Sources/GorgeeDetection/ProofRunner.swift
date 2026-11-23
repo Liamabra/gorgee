@@ -10,6 +10,7 @@ public final class ProofRunner {
 
     public private(set) var machine: SipStateMachine
     public private(set) var lastVerdict: ContainerVerdict?
+    public private(set) var judgeFailures = 0
     private var poseDetector = DrinkingPoseDetector()
     private let analyzer = FrameAnalyzer()
     private let judge: (CVPixelBuffer) async throws -> ContainerVerdict
@@ -32,9 +33,14 @@ public final class ProofRunner {
 
         if machine.wantsJudgement, time - lastJudgementAt >= Self.judgementInterval {
             lastJudgementAt = time
-            let verdict = (try? await judge(pixelBuffer)) ?? .noContainer
-            lastVerdict = verdict
-            machine.judge(verdict, at: time)
+            do {
+                let verdict = try await judge(pixelBuffer)
+                lastVerdict = verdict
+                machine.judge(verdict, at: time)
+            } catch {
+                // Une panne du juge n'est pas un « pas de verre » : on la compte pour la signaler.
+                judgeFailures += 1
+            }
         }
         return machine.step
     }

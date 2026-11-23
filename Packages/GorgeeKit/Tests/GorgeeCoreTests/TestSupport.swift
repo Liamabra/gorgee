@@ -22,7 +22,7 @@ extension HydrationSettings {
 
 extension HydrationEngine {
     static func sample(now: Date, debt: Double = 0) -> HydrationEngine {
-        var state = HydrationState.fresh(day: TestClock.calendar.startOfDay(for: now), jokers: 2)
+        var state = HydrationState.fresh(for: now, calendar: TestClock.calendar, jokers: 2)
         state.debtML = debt
         return HydrationEngine(settings: .sample, state: state, calendar: TestClock.calendar)
     }

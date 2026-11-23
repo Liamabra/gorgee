@@ -793,6 +793,38 @@
         }
       }
     },
+    "Le modèle d'Apple ne répond pas. Tu peux déclarer ta gorgée contre un joker." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple's model isn't responding. You can declare your sip for a joker."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le modèle d'Apple ne répond pas. Tu peux déclarer ta gorgée contre un joker."
+          }
+        }
+      }
+    },
+    "Les changements s'appliquent le lendemain, pour ne pas desserrer l'étau en pleine sécheresse." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changes apply the next day, so you can't loosen the grip in the middle of a drought."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les changements s'appliquent le lendemain, pour ne pas desserrer l'étau en pleine sécheresse."
+          }
+        }
+      }
+    },
     "Litres" : {
       "localizations" : {
         "en" : {
@@ -853,6 +885,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Objectif du jour"
+          }
+        }
+      }
+    },
+    "Ouvrir les réglages" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Settings"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les réglages"
           }
         }
       }
@@ -1285,6 +1333,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Série"
+          }
+        }
+      }
+    },
+    "Tes changements s'appliqueront demain matin." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your changes will apply tomorrow morning."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tes changements s'appliqueront demain matin."
           }
         }
       }

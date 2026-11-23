@@ -6,7 +6,9 @@ Gorgée assèche ton écran tant que tu n'as pas bu. Plus tu travailles sans boi
 
 Inspiré de [Ghostty Blackhole](https://github.com/s0xDk/ghostty-blackhole), version hydratation.
 
-> **État : en construction.** Sécheresse et preuve par caméra fonctionnent ; quantité mesurée, historique et widget arrivent.
+> **État : en construction.** Sécheresse, preuve par caméra, quantité et historique fonctionnent ; le widget arrive.
+
+Le build Debug sert au développement : protection anti-fermeture désactivée, accélérateur de temps et bouton pour masquer la sécheresse.
 
 ## Comment ça marche
 
@@ -15,7 +17,9 @@ Inspiré de [Ghostty Blackhole](https://github.com/s0xDk/ghostty-blackhole), ver
 - **Sécheresse** : premiers signes à 250 mL de dette, écran inutilisable à 750 mL. Rien n'est vraiment ralenti, et tes clics passent toujours au travers.
 - **Preuve** : ⌃⌥G (ou le menu) ouvre la caméra ; elle s'ouvre aussi seule quand la sécheresse s'aggrave. Montre ton verre d'eau, bois tête inclinée, repose-le, remontre-le. Vision et le modèle embarqué d'Apple jugent le geste et la couleur du liquide : tout se passe sur ton Mac, aucune image n'est envoyée ni enregistrée.
 - **Visio** : quand une autre app utilise la caméra, la sécheresse attend (la dette, elle, continue).
-- **Jokers** : 2 par jour, pour suspendre la sécheresse 15 minutes.
+- **Jokers** : 2 par jour, pour suspendre la sécheresse 15 minutes ou déclarer une gorgée sans preuve (sans caméra, ou après 3 vrais refus).
+- **Réglages** : après la première configuration, ils s'appliquent le lendemain, pour qu'on ne desserre pas l'étau en pleine sécheresse.
+- **Historique** : total du jour, série de jours réussis, courbes 7 et 30 jours, export CSV et JSON. « Bu ailleurs » compte dans le total, pas dans la dette.
 
 ## Compiler
 
@@ -23,8 +27,8 @@ Prérequis : macOS 27, Xcode 27, [XcodeGen](https://github.com/yonaskolb/XcodeGe
 
 ```sh
 xcodegen generate
-xcodebuild -project Gorgee.xcodeproj -scheme Gorgee -derivedDataPath build build
-open build/Build/Products/Debug/Gorgee.app
+xcodebuild -project Gorgee.xcodeproj -scheme Gorgee -configuration Release -derivedDataPath build build
+open build/Build/Products/Release/Gorgee.app
 ```
 
 Tests de la logique :

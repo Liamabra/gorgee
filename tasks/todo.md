@@ -88,3 +88,23 @@ Plan validé : `~/.claude/plans/j-ai-envie-de-cr-er-snug-bee-of-c17f7770-8f82-4b
 - Ruling: la série se mesure avec l'objectif actuel, pas celui de chaque jour passé — l'objectif change rarement — coût si faux : une série recalculée après un changement de poids.
 - Ruling: le widget (M5) est reporté — il exige une identité de signature pour l'App Group, absente — coût si faux : aucun, la jauge de la barre de menus couvre le besoin.
 - Ruling: le temps où l'app est morte compte comme actif (plafonné à 60 s par tick) — tuer l'app ne doit pas effacer la dette — coût si faux : quelques mL de trop après un plantage.
+## Revue finale (agent indépendant, tout le dépôt)
+
+- Final: fixed proof bloquée après un refus de caméra ou sans caméra — `show()` relance dès qu'aucune preuve ne tourne, « Réessayer » et « Ouvrir les réglages » proposés — vérifié par build (pas de cible de tests UI).
+- Final: fixed caméra suspendue (capot fermé) — filtrée ; aucune image en 8 s → « pas de caméra », ce qui ouvre la déclaration manuelle — vérifié par build.
+- Final: fixed panne du juge déguisée en « pas de verre » — `ProofRunnerTests` RED→GREEN ; l'app passe en « modèle indisponible » et ouvre la déclaration manuelle.
+- Final: fixed seuil abaissé qui effaçait la dette — `loweringThresholdKeepsDebt` RED→GREEN.
+- Final: fixed réglages qui desserraient l'étau sur-le-champ — `scheduledSettingsApplyTomorrow`, `pendingSettingsPersist` RED→GREEN ; immédiat seulement pendant la première configuration.
+- Final: fixed geste seul (sans Apple Intelligence) qui créditait un quart de grand verre pour une main vide — crédit fixe de 100 mL — vérifié par build.
+- Final: fixed README qui compilait la configuration Debug — passe en Release.
+- Final: fixed voyage vers l'ouest qui remettait la journée à zéro — `travellingWestKeepsTheDay` RED→GREEN (jour ancré à midi) ; calendrier `autoupdatingCurrent`.
+- Final: fixed fichier d'état illisible écrasé en silence — `corruptedFileIsSetAside` RED→GREEN.
+- Final: fixed gorgée perdue après une ligne tronquée — `appendAfterTornLineKeepsNextEvent` RED→GREEN ; total du jour calculé depuis le journal.
+- Final: fixed (regradé Important) panneau automatique qui volait la frappe — ouverture sans prise de focus.
+- Final: fixed (regradé Important) poussière animée en continu — en pause pendant l'inactivité, rien quand il n'y a aucun grain.
+- Suite : 92 tests verts ; builds Debug et Release sans avertissement.
+- Final: minor (deferred): `CameraController.start()` configure la session sur le fil principal (bref gel) ; course possible si on ferme puis rouvre pendant la première demande d'autorisation.
+- Final: minor (deferred): Debug et Release partagent identifiant, préférences et libellé du LaunchAgent.
+- Final: minor (deferred): `state.json` réécrit toutes les 5 s.
+- Final: Ruling: une app qui utilise la caméra (Photo Booth) suspend la sécheresse — prévu par la spec — coût si faux : une échappatoire, connue.
+- Final: Ruling: sans caméra autorisée, 2 déclarations par jour restent possibles — c'est le budget de jokers — coût si faux : 2 gorgées sans preuve par jour.

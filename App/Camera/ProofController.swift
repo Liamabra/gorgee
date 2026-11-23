@@ -14,17 +14,22 @@ final class ProofController {
         case finished(SipStep)
         case cameraDenied
         case noCamera
+        /// Le modèle d'Apple ne répond pas : la preuve est impossible, pas refusée.
+        case judgeUnavailable
     }
 
     /// Filet de sécurité si la caméra cesse d'envoyer des images.
     static let maximumDuration: Duration = .seconds(90)
+    /// Sans première image dans ce délai, la caméra est considérée indisponible.
+    static let firstFrameTimeout: Duration = .seconds(8)
 
     private(set) var status: Status = .idle
     private(set) var drinkProgress = 0.0
     private(set) var lastVerdict: ContainerVerdict?
     /// Volume crédité par la dernière preuve validée.
     private(set) var creditedMilliliters = 0
-    let gestureOnly = !GlassJudge.isAvailable
+    /// Sans Apple Intelligence, seul le geste est vérifié ; réévalué à chaque preuve.
+    private(set) var gestureOnly = !GlassJudge.isAvailable
 
     @ObservationIgnored let camera = CameraController()
     /// Volume crédité pour des niveaux avant et après donnés, en quarts.
@@ -33,6 +38,7 @@ final class ProofController {
     @ObservationIgnored var onRefused: () -> Void = {}
     @ObservationIgnored private var task: Task<Void, Never>?
     @ObservationIgnored private let log = Logger(subsystem: "app.gorgee.Gorgee", category: "proof")
+    @ObservationIgnored private var framesReceived = 0
 
     var isActive: Bool {
         switch status {
@@ -45,6 +51,8 @@ final class ProofController {
         guard !isActive else { return }
         drinkProgress = 0
         lastVerdict = nil
+        framesReceived = 0
+        gestureOnly = !GlassJudge.isAvailable
         status = .starting
         task = Task { [weak self] in await self?.run() }
     }
@@ -53,7 +61,15 @@ final class ProofController {
         task?.cancel()
         task = nil
         camera.stop()
-        if isActive { status = .idle }
+        status = .idle
+    }
+
+    /// La caméra ou le juge manquent : déclarer à la main (contre un joker) devient possible.
+    var proofImpossible: Bool {
+        switch status {
+        case .cameraDenied, .noCamera, .judgeUnavailable: true
+        default: false
+        }
     }
 
     private func run() async {
@@ -77,7 +93,12 @@ final class ProofController {
                 let active = runner ?? ProofRunner(startedAt: frame.time, judge: judge)
                 runner = active
                 let step = await active.process(frame.pixelBuffer, at: frame.time)
-                sink.yield(ProofUpdate(step: step, progress: active.machine.drinkProgress, verdict: active.lastVerdict))
+                sink.yield(ProofUpdate(
+                    step: step,
+                    progress: active.machine.drinkProgress,
+                    verdict: active.lastVerdict,
+                    judgeFailures: active.judgeFailures
+                ))
                 if active.machine.isFinished || Task.isCancelled { break }
             }
             sink.finish()
@@ -87,10 +108,19 @@ final class ProofController {
             worker.cancel()
             sink.finish()
         }
+        let firstFrameWatch = Task { [weak self] in
+            try? await Task.sleep(for: Self.firstFrameTimeout)
+            guard !Task.isCancelled, self?.framesReceived == 0 else { return }
+            worker.cancel()
+            sink.finish()
+        }
 
         var finalStep = SipStep.showContainer
+        var judgeFailures = 0
         for await update in updates {
             guard !Task.isCancelled else { break }
+            framesReceived += 1
+            judgeFailures = update.judgeFailures
             finalStep = update.step
             drinkProgress = update.progress
             lastVerdict = update.verdict
@@ -98,8 +128,19 @@ final class ProofController {
         }
         worker.cancel()
         watchdog.cancel()
+        firstFrameWatch.cancel()
         camera.stop()
         guard !Task.isCancelled else { return }
+
+        if framesReceived == 0 {
+            status = .noCamera
+            return
+        }
+        if judgeFailures > 0, lastVerdict == nil {
+            log.error("Le juge d'images a échoué \(judgeFailures) fois sans verdict.")
+            status = .judgeUnavailable
+            return
+        }
 
         // Images coupées avant la fin : on refuse sur l'étape où l'on s'est arrêté.
         switch finalStep {
@@ -111,7 +152,7 @@ final class ProofController {
         }
         status = .finished(finalStep)
         if case .verified(let before, let after) = finalStep {
-            creditedMilliliters = credit(before, after)
+            creditedMilliliters = gestureOnly ? SipCredit.gestureOnlyMilliliters : credit(before, after)
             onVerified(creditedMilliliters)
         } else {
             onRefused()
@@ -132,4 +173,5 @@ nonisolated private struct ProofUpdate: Sendable {
     var step: SipStep
     var progress: Double
     var verdict: ContainerVerdict?
+    var judgeFailures: Int
 }

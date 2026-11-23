@@ -8,18 +8,31 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
+            if !model.isOnboarding {
+                Section {
+                    Label(
+                        model.hasPendingSettings
+                            ? "Tes changements s'appliqueront demain matin."
+                            : "Les changements s'appliquent le lendemain, pour ne pas desserrer l'étau en pleine sécheresse.",
+                        systemImage: "calendar"
+                    )
+                    .font(.callout)
+                    .foregroundStyle(model.hasPendingSettings ? .orange : .secondary)
+                }
+            }
+
             Section("Profil") {
                 Picker("Sexe", selection: setting(\.sex)) {
                     Text("Femme").tag(Sex.female)
                     Text("Homme").tag(Sex.male)
                 }
-                Stepper("Poids : \(Int(model.settings.weightKg)) kg", value: setting(\.weightKg), in: 30...200, step: 1)
-                LabeledContent("Objectif du jour", value: Liters.format(model.settings.dailyGoalML))
+                Stepper("Poids : \(Int(model.editedSettings.weightKg)) kg", value: setting(\.weightKg), in: 30...200, step: 1)
+                LabeledContent("Objectif du jour", value: Liters.format(model.editedSettings.dailyGoalML))
             }
 
             Section("Récipient") {
                 Stepper(
-                    "Contenance de ton verre : \(model.settings.containerCapacityML) mL",
+                    "Contenance de ton verre : \(model.editedSettings.containerCapacityML) mL",
                     value: setting(\.containerCapacityML),
                     in: 100...1500,
                     step: 50
@@ -36,12 +49,12 @@ struct SettingsView: View {
                 Picker("Fin", selection: endHour) {
                     ForEach(1...24, id: \.self) { Text("\($0) h").tag($0) }
                 }
-                LabeledContent("Rythme", value: String(localized: "\(Int(model.settings.accrualPerHourML.rounded())) mL par heure active"))
+                LabeledContent("Rythme", value: String(localized: "\(Int(model.editedSettings.accrualPerHourML.rounded())) mL par heure active"))
             }
 
             Section("Sécheresse") {
-                Stepper("Premiers signes à \(Int(model.settings.firstSignsML)) mL", value: firstSigns, in: 50...2950, step: 50)
-                Stepper("Inutilisable à \(Int(model.settings.unusableML)) mL", value: unusable, in: 100...3000, step: 50)
+                Stepper("Premiers signes à \(Int(model.editedSettings.firstSignsML)) mL", value: firstSigns, in: 50...2950, step: 50)
+                Stepper("Inutilisable à \(Int(model.editedSettings.unusableML)) mL", value: unusable, in: 100...3000, step: 50)
             }
 
             Section("Protection") {
@@ -91,14 +104,14 @@ struct SettingsView: View {
 
     private func setting<Value>(_ keyPath: WritableKeyPath<HydrationSettings, Value>) -> Binding<Value> {
         Binding(
-            get: { model.settings[keyPath: keyPath] },
+            get: { model.editedSettings[keyPath: keyPath] },
             set: { value in model.updateSettings { $0[keyPath: keyPath] = value } }
         )
     }
 
     private var startHour: Binding<Int> {
         Binding(
-            get: { model.settings.dayStartHour },
+            get: { model.editedSettings.dayStartHour },
             set: { hour in
                 model.updateSettings {
                     $0.dayStartHour = hour
@@ -110,7 +123,7 @@ struct SettingsView: View {
 
     private var endHour: Binding<Int> {
         Binding(
-            get: { model.settings.dayEndHour },
+            get: { model.editedSettings.dayEndHour },
             set: { hour in
                 model.updateSettings {
                     $0.dayEndHour = hour
@@ -122,7 +135,7 @@ struct SettingsView: View {
 
     private var firstSigns: Binding<Double> {
         Binding(
-            get: { model.settings.firstSignsML },
+            get: { model.editedSettings.firstSignsML },
             set: { value in
                 model.updateSettings {
                     $0.firstSignsML = value
@@ -134,7 +147,7 @@ struct SettingsView: View {
 
     private var unusable: Binding<Double> {
         Binding(
-            get: { model.settings.unusableML },
+            get: { model.editedSettings.unusableML },
             set: { value in
                 model.updateSettings {
                     $0.unusableML = value
@@ -156,6 +169,7 @@ struct SettingsView: View {
 final class SettingsWindowController {
     static let shared = SettingsWindowController()
     private var window: NSWindow?
+    private var closeObserver: NSObjectProtocol?
 
     func show(model: AppModel) {
         let window = self.window ?? makeWindow(model: model)
@@ -171,6 +185,12 @@ final class SettingsWindowController {
         window.styleMask = [.titled, .closable]
         window.level = NSWindow.Level(rawValue: OverlayController.level.rawValue + 1)
         window.isReleasedWhenClosed = false
+        // Fermer la première fenêtre de réglages termine la configuration initiale.
+        closeObserver = NotificationCenter.default.addObserver(
+            forName: NSWindow.willCloseNotification, object: window, queue: .main
+        ) { [weak model] _ in
+            MainActor.assumeIsolated { model?.finishOnboarding() }
+        }
         return window
     }
 }

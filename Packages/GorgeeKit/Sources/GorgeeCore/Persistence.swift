@@ -32,9 +32,15 @@ public struct JSONFileStore<Value: Codable>: Sendable {
     }
 
     /// `nil` si le fichier est absent ou illisible : on repart alors d'un état neuf.
+    /// Un fichier illisible est d'abord mis de côté (`nom.corrupt-<date>.json`), jamais écrasé.
     public func load() -> Value? {
         guard let data = try? Data(contentsOf: url) else { return nil }
-        return try? GorgeeJSON.decoder().decode(Value.self, from: data)
+        if let value = try? GorgeeJSON.decoder().decode(Value.self, from: data) { return value }
+        let stamp = Int(Date().timeIntervalSince1970)
+        let name = url.deletingPathExtension().lastPathComponent
+        let aside = url.deletingLastPathComponent().appending(path: "\(name).corrupt-\(stamp).\(url.pathExtension)")
+        try? FileManager.default.moveItem(at: url, to: aside)
+        return nil
     }
 
     public func save(_ value: Value) throws {
@@ -57,10 +63,19 @@ public struct DrinkLog: Sendable {
             try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
             fileManager.createFile(atPath: url.path, contents: nil)
         }
-        let handle = try FileHandle(forWritingTo: url)
+        let handle = try FileHandle(forUpdating: url)
         defer { try? handle.close() }
-        try handle.seekToEnd()
-        try handle.write(contentsOf: GorgeeJSON.encoder().encode(event) + Data("\n".utf8))
+        let end = try handle.seekToEnd()
+        var line = try GorgeeJSON.encoder().encode(event) + Data("\n".utf8)
+        // Une écriture interrompue a pu laisser une ligne sans fin : on repart sur une ligne neuve.
+        if end > 0 {
+            try handle.seek(toOffset: end - 1)
+            if try handle.read(upToCount: 1) != Data("\n".utf8) {
+                line = Data("\n".utf8) + line
+            }
+            try handle.seekToEnd()
+        }
+        try handle.write(contentsOf: line)
     }
 
     /// Les lignes abîmées (écriture interrompue) sont ignorées.

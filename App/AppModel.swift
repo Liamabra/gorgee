@@ -31,6 +31,9 @@ final class AppModel {
     @ObservationIgnored let overlay = OverlayController()
     @ObservationIgnored private(set) var proofPanel: ProofPanelController!
     @ObservationIgnored private var lastPhase: DroughtPhase?
+    @ObservationIgnored private var savedSettings: HydrationSettings
+    /// Première configuration : les réglages s'appliquent tout de suite, ensuite seulement le lendemain.
+    private(set) var isOnboarding: Bool
     @ObservationIgnored private let files: AppFiles
     @ObservationIgnored private var tickTask: Task<Void, Never>?
     @ObservationIgnored private var quitAuthorized = false
@@ -43,9 +46,12 @@ final class AppModel {
         self.files = files
         let savedSettings = files.settings.load()
         let settings = savedSettings ?? Self.defaultSettings
-        let state = files.state.load()
-            ?? .fresh(day: Calendar.current.startOfDay(for: .now), jokers: settings.jokersPerDay)
-        engine = HydrationEngine(settings: settings, state: state)
+        // Calendrier qui suit les changements de fuseau horaire.
+        let calendar = Calendar.autoupdatingCurrent
+        let state = files.state.load() ?? .fresh(for: .now, calendar: calendar, jokers: settings.jokersPerDay)
+        engine = HydrationEngine(settings: settings, state: state, calendar: calendar)
+        self.savedSettings = settings
+        isOnboarding = savedSettings == nil
         hasProfile = savedSettings != nil
         protectionEnabled = Protection.isEnabled
         drinkEvents = (try? files.drinks.readAll()) ?? []
@@ -74,7 +80,12 @@ final class AppModel {
     var settings: HydrationSettings { engine.settings }
     var debtML: Int { Int(engine.state.debtML.rounded()) }
     var debtFraction: Double { min(1, engine.state.debtML / max(1, settings.unusableML)) }
-    var drankTodayML: Int { engine.state.drankTodayML }
+    /// Calculé depuis le journal, la seule source de vérité des gorgées.
+    var drankTodayML: Int { HydrationHistory(events: drinkEvents, calendar: engine.calendar).total(on: now) }
+
+    /// Les réglages tels qu'ils seront demain (en attente) ou tels qu'ils sont.
+    var editedSettings: HydrationSettings { engine.state.pendingSettings ?? engine.settings }
+    var hasPendingSettings: Bool { engine.state.pendingSettings != nil }
     var jokersLeft: Int { engine.state.jokersLeft }
     var pausedUntil: Date? { engine.isPaused(at: now) ? engine.state.pausedUntil : nil }
     var canUseJoker: Bool { jokersLeft > 0 && !engine.isPaused(at: now) }
@@ -82,7 +93,7 @@ final class AppModel {
 
     /// Sans caméra utilisable, ou après 3 vrais refus, une gorgée peut se déclarer contre un joker.
     var canDeclareManually: Bool {
-        let cameraAvailable = CameraController.hasAllowedCamera && proof.status != .cameraDenied
+        let cameraAvailable = CameraController.hasAllowedCamera && !proof.proofImpossible
         return engine.canDeclareManually(at: now, cameraAvailable: cameraAvailable)
     }
 
@@ -102,13 +113,23 @@ final class AppModel {
 
     // MARK: - Actions
 
+    /// Modifie les réglages. Hors première configuration, ils ne s'appliquent que le lendemain :
+    /// on ne desserre pas l'étau en pleine sécheresse.
     func updateSettings(_ change: (inout HydrationSettings) -> Void) {
-        var settings = engine.settings
+        var settings = editedSettings
         change(&settings)
-        engine.settings = settings
+        if isOnboarding {
+            engine.settings = settings
+        } else {
+            engine.scheduleSettings(settings)
+        }
         hasProfile = true
-        do { try files.settings.save(settings) } catch { log.error("Réglages non sauvegardés : \(error)") }
+        persistState()
         refreshOverlay()
+    }
+
+    func finishOnboarding() {
+        isOnboarding = false
     }
 
     func recordDrink(_ milliliters: Int, source: DrinkSource) {
@@ -164,7 +185,7 @@ final class AppModel {
 
     func declareManually(_ milliliters: Int) {
         let before = displaySeverity
-        let cameraAvailable = CameraController.hasAllowedCamera && proof.status != .cameraDenied
+        let cameraAvailable = CameraController.hasAllowedCamera && !proof.proofImpossible
         guard let event = engine.declareManually(milliliters, at: .now, cameraAvailable: cameraAvailable) else { return }
         journal(event)
         persistState()
@@ -223,6 +244,15 @@ final class AppModel {
 
     func persistState() {
         do { try files.state.save(engine.state) } catch { log.error("État non sauvegardé : \(error)") }
+        // Les réglages en attente deviennent actifs au changement de jour : on les enregistre alors.
+        if engine.settings != savedSettings {
+            do {
+                try files.settings.save(engine.settings)
+                savedSettings = engine.settings
+            } catch {
+                log.error("Réglages non sauvegardés : \(error)")
+            }
+        }
     }
 
     // MARK: - Horloge
@@ -235,6 +265,7 @@ final class AppModel {
         #endif
         engine.tick(now: now, isActive: isUserActive, timeScale: timeScale)
         persistState()
+        overlay.setAnimating(isUserActive)
         refreshOverlay()
         openProofIfDroughtWorsened()
     }
@@ -246,7 +277,7 @@ final class AppModel {
         guard let previous = lastPhase, current.rank > previous.rank, current.rank > 0,
               !cameraMonitor.isBusy, !proofPanel.isVisible
         else { return }
-        proofPanel.show()
+        proofPanel.show(takeFocus: false)
     }
 
     private func startTicking() {

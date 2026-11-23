@@ -13,12 +13,12 @@ struct DroughtView: View {
                     let progress = wash.progress(at: timeline.date)
                     let eased = 1 - pow(1 - progress, 3)
                     ZStack {
-                        DroughtLayers(severity: wash.from + (wash.to - wash.from) * eased, tiling: tiling)
+                        DroughtLayers(severity: wash.from + (wash.to - wash.from) * eased, tiling: tiling, animating: false)
                         WaterWashLayer(progress: progress)
                     }
                 }
             } else {
-                DroughtLayers(severity: state.severity, tiling: tiling)
+                DroughtLayers(severity: state.severity, tiling: tiling, animating: state.animating)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -40,6 +40,7 @@ private enum Palette {
 private struct DroughtLayers: View {
     let severity: Double
     let tiling: MudTiling
+    let animating: Bool
 
     var body: some View {
         ZStack {
@@ -47,8 +48,8 @@ private struct DroughtLayers: View {
                 drawHaze(in: &context, size: size)
                 drawMud(in: &context)
             }
-            if severity > 0 {
-                DustLayer(severity: severity)
+            if Int(DustLayer.maxGrains * severity) > 0 {
+                DustLayer(severity: severity, animating: animating)
             }
         }
     }
@@ -108,13 +109,15 @@ private struct DroughtLayers: View {
 
 /// Grains de poussière portés par le vent ; seule couche animée en continu.
 private struct DustLayer: View {
+    static let maxGrains = 180.0
     let severity: Double
+    let animating: Bool
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 30)) { timeline in
+        TimelineView(.animation(minimumInterval: 1.0 / 30, paused: !animating)) { timeline in
             Canvas { context, size in
                 let time = timeline.date.timeIntervalSinceReferenceDate
-                let count = Int(180 * severity)
+                let count = Int(Self.maxGrains * severity)
                 for index in 0..<count {
                     let speed = 12 + 40 * unitNoise(index, 1)
                     let span = size.width + 20

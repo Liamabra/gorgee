@@ -29,6 +29,8 @@ nonisolated final class CameraController: NSObject, @unchecked Sendable, AVCaptu
             position: .unspecified
         )
         .devices
+        // Une caméra suspendue (capot fermé) n'enverrait aucune image.
+        .filter { !$0.isSuspended }
         .filter { CameraPolicy.isAllowed(transportType: $0.transportType, isContinuityCamera: $0.isContinuityCamera) }
     }
 
