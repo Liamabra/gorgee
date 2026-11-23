@@ -6,9 +6,12 @@ let package = Package(
     platforms: [.macOS("27.0")],
     products: [
         .library(name: "GorgeeCore", targets: ["GorgeeCore"]),
+        .library(name: "GorgeeDetection", targets: ["GorgeeDetection"]),
     ],
     targets: [
         .target(name: "GorgeeCore"),
+        .target(name: "GorgeeDetection", dependencies: ["GorgeeCore"]),
         .testTarget(name: "GorgeeCoreTests", dependencies: ["GorgeeCore"]),
+        .testTarget(name: "GorgeeDetectionTests", dependencies: ["GorgeeDetection", "GorgeeCore"]),
     ]
 )
