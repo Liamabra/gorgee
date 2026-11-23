@@ -1,0 +1,127 @@
+import GorgeeCore
+import SwiftUI
+
+struct MenuView: View {
+    let model: AppModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Gorgée").font(.headline)
+                Spacer()
+                Text(model.phase.label)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Dette : \(model.debtML) mL")
+                ProgressView(value: model.debtFraction)
+                    .tint(model.phase.tint)
+            }
+
+            Text("Bu aujourd'hui : \(Liters.format(model.drankTodayML)) sur \(Liters.format(model.settings.dailyGoalML))")
+
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text("Jokers : \(model.jokersLeft)")
+                    Spacer()
+                    Button("Pause \(Int(model.settings.jokerPauseMinutes)) min") {
+                        model.usePauseJoker()
+                    }
+                    .disabled(!model.canUseJoker)
+                }
+                if let pausedUntil = model.pausedUntil {
+                    Text("En pause jusqu'à \(pausedUntil, style: .time)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Divider()
+
+            VStack(alignment: .leading, spacing: 4) {
+                Button {
+                    model.recordDrink(250, source: .manual)
+                } label: {
+                    Label("J'ai bu un verre (\(250) mL)", systemImage: "drop.fill")
+                }
+                Text("Provisoire, en attendant la preuve par caméra.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Divider()
+
+            HStack {
+                Button("Réglages…") { model.openSettings() }
+                Spacer()
+                if model.protectionEnabled {
+                    Button("Quitter…") { model.openSettings() }
+                } else {
+                    Button("Quitter") { model.quit() }
+                }
+            }
+
+            #if DEBUG
+            DebugMenuSection(model: model)
+            #endif
+        }
+        .padding(14)
+        .frame(width: 300)
+    }
+}
+
+extension DroughtPhase {
+    var label: LocalizedStringKey {
+        switch self {
+        case .outsideHours: "Hors de ta plage horaire"
+        case .paused: "En pause"
+        case .intact: "Écran intact"
+        case .drying: "Ça commence à sécher"
+        case .drought: "Sécheresse"
+        case .unusable: "Écran inutilisable"
+        }
+    }
+
+    var tint: Color {
+        switch self {
+        case .outsideHours, .paused, .intact: .blue
+        case .drying: .orange
+        case .drought, .unusable: .brown
+        }
+    }
+}
+
+enum Liters {
+    static func format(_ milliliters: Int) -> String {
+        let liters = (Double(milliliters) / 1000).formatted(.number.precision(.fractionLength(2)))
+        return "\(liters) L"
+    }
+}
+
+#if DEBUG
+private struct DebugMenuSection: View {
+    @Bindable var model: AppModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Divider()
+            Text(verbatim: "Debug · actif : \(model.isUserActive ? "oui" : "non")")
+                .font(.caption.bold())
+            Picker(selection: $model.timeScale) {
+                Text(verbatim: "×1").tag(1.0)
+                Text(verbatim: "×60").tag(60.0)
+                Text(verbatim: "×600").tag(600.0)
+            } label: {
+                Text(verbatim: "Vitesse")
+            }
+            .pickerStyle(.segmented)
+            Toggle(isOn: $model.overlayHiddenForDebug) {
+                Text(verbatim: "Masquer la sécheresse (⌃⌥⇧D)")
+            }
+        }
+        .font(.caption)
+    }
+}
+#endif

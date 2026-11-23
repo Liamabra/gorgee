@@ -1,13 +1,15 @@
 import SwiftUI
-import GorgeeCore
 
 @main
 struct GorgeeApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
+
     var body: some Scene {
-        MenuBarExtra("Gorgée", systemImage: "drop.fill") {
-            Text("Objectif : \(DailyGoal.milliliters(sex: .female, weightKg: 60)) mL")
-            Divider()
-            Button("Quitter") { NSApp.terminate(nil) }
+        MenuBarExtra {
+            MenuView(model: delegate.model)
+        } label: {
+            Image(systemName: delegate.model.phase.symbolName)
         }
+        .menuBarExtraStyle(.window)
     }
 }
