@@ -17,6 +17,18 @@ struct SettingsView: View {
                 LabeledContent("Objectif du jour", value: Liters.format(model.settings.dailyGoalML))
             }
 
+            Section("Récipient") {
+                Stepper(
+                    "Contenance de ton verre : \(model.settings.containerCapacityML) mL",
+                    value: setting(\.containerCapacityML),
+                    in: 100...1500,
+                    step: 50
+                )
+                Text("Une gorgée vérifiée crédite la baisse du niveau, au moins un quart de cette contenance.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Section("Plage horaire") {
                 Picker("Début", selection: startHour) {
                     ForEach(0..<24, id: \.self) { Text("\($0) h").tag($0) }

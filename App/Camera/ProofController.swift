@@ -16,17 +16,19 @@ final class ProofController {
         case noCamera
     }
 
-    /// Volume crédité par gorgée vérifiée, en attendant la mesure du niveau (M3).
-    static let creditedMilliliters = 250
     /// Filet de sécurité si la caméra cesse d'envoyer des images.
     static let maximumDuration: Duration = .seconds(90)
 
     private(set) var status: Status = .idle
     private(set) var drinkProgress = 0.0
     private(set) var lastVerdict: ContainerVerdict?
+    /// Volume crédité par la dernière preuve validée.
+    private(set) var creditedMilliliters = 0
     let gestureOnly = !GlassJudge.isAvailable
 
     @ObservationIgnored let camera = CameraController()
+    /// Volume crédité pour des niveaux avant et après donnés, en quarts.
+    @ObservationIgnored var credit: (Int, Int) -> Int = { _, _ in 0 }
     @ObservationIgnored var onVerified: (Int) -> Void = { _ in }
     @ObservationIgnored var onRefused: () -> Void = {}
     @ObservationIgnored private var task: Task<Void, Never>?
@@ -108,8 +110,9 @@ final class ProofController {
         case .verified, .refused: break
         }
         status = .finished(finalStep)
-        if case .verified = finalStep {
-            onVerified(Self.creditedMilliliters)
+        if case .verified(let before, let after) = finalStep {
+            creditedMilliliters = credit(before, after)
+            onVerified(creditedMilliliters)
         } else {
             onRefused()
         }

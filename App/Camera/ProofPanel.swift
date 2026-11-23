@@ -162,7 +162,7 @@ struct ProofView: View {
         case .noCamera:
             return "Aucune caméra physique disponible. Tu peux déclarer ta gorgée contre un joker."
         case .finished(.verified):
-            return "Gorgée validée : \(ProofController.creditedMilliliters) mL. L'eau revient !"
+            return "Gorgée validée : \(proof.creditedMilliliters) mL. L'eau revient !"
         case .finished(.refused(let reason)):
             return reason.message
         case .finished:

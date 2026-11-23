@@ -49,6 +49,13 @@ final class AppModel {
         if let scale = DebugOptions.timeScale { timeScale = scale }
         #endif
         proofPanel = ProofPanelController(model: self)
+        proof.credit = { [weak self] before, after in
+            SipCredit.milliliters(
+                capacity: self?.settings.containerCapacityML ?? 250,
+                beforeQuarters: before,
+                afterQuarters: after
+            )
+        }
         proof.onVerified = { [weak self] milliliters in self?.recordDrink(milliliters, source: .camera) }
         proof.onRefused = { [weak self] in self?.recordRefusal() }
     }
