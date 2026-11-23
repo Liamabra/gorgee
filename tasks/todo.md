@@ -5,16 +5,16 @@ Plan validé : `~/.claude/plans/j-ai-envie-de-cr-er-snug-bee-of-c17f7770-8f82-4b
 ## M0 — Squelette
 - [x] Ancienne app déplacée dans `legacy/`, `git init`
 - [x] `.gitignore`, licence MIT, README avec coupe-circuit
-- [ ] `project.yml`, paquet `GorgeeKit`, app minimale
-- [ ] Build `xcodebuild` + `swift test` verts
-- [ ] Dépôt GitHub public `gorgee` créé et poussé
+- [x] `project.yml`, paquet `GorgeeKit`, app minimale
+- [x] Build `xcodebuild` + `swift test` verts
+- [x] Dépôt GitHub public `gorgee` créé et poussé (https://github.com/Liamabra/gorgee)
 - [ ] Identité de signature (action de l'utilisateur : identifiant Apple dans Xcode)
 
 ## M1 — Sécheresse
-- [ ] Objectif journalier (TDD)
-- [ ] Moteur de dette : accumulation, plage, gel, plafond, sévérité (TDD)
-- [ ] Gorgées : remboursement, « bu ailleurs », changement de jour (TDD)
-- [ ] Jokers : pause 15 min (TDD)
+- [x] Objectif journalier (TDD)
+- [x] Moteur de dette : accumulation, plage, gel, plafond, sévérité (TDD)
+- [x] Gorgées : remboursement, « bu ailleurs », changement de jour (TDD)
+- [x] Jokers : pause 15 min (TDD)
 - [ ] Persistance JSON + journal des gorgées (TDD)
 - [ ] Réseau de craquelures déterministe (TDD)
 - [ ] Moniteur d'activité (inactivité + session verrouillée)
