@@ -9,9 +9,28 @@ public struct HydrationState: Codable, Equatable, Sendable {
     public var jokersLeft: Int
     public var pausedUntil: Date?
     public var lastTick: Date?
+    /// Preuves refusées d'affilée ; à 3, on peut déclarer à la main contre un joker.
+    public var consecutiveRefusals: Int
 
     public static func fresh(day: Date, jokers: Int) -> HydrationState {
-        HydrationState(day: day, debtML: 0, drankTodayML: 0, jokersLeft: jokers, pausedUntil: nil, lastTick: nil)
+        HydrationState(
+            day: day, debtML: 0, drankTodayML: 0, jokersLeft: jokers,
+            pausedUntil: nil, lastTick: nil, consecutiveRefusals: 0
+        )
+    }
+}
+
+extension HydrationState {
+    /// Lecture tolérante : un champ ajouté après coup prend sa valeur par défaut dans un ancien fichier.
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        day = try container.decode(Date.self, forKey: .day)
+        debtML = try container.decode(Double.self, forKey: .debtML)
+        drankTodayML = try container.decode(Int.self, forKey: .drankTodayML)
+        jokersLeft = try container.decode(Int.self, forKey: .jokersLeft)
+        pausedUntil = try container.decodeIfPresent(Date.self, forKey: .pausedUntil)
+        lastTick = try container.decodeIfPresent(Date.self, forKey: .lastTick)
+        consecutiveRefusals = try container.decodeIfPresent(Int.self, forKey: .consecutiveRefusals) ?? 0
     }
 }
 
@@ -52,8 +71,33 @@ public struct HydrationEngine: Sendable {
         state.drankTodayML += milliliters
         if source.repaysDebt {
             state.debtML = max(0, state.debtML - Double(milliliters))
+            state.consecutiveRefusals = 0
         }
         return DrinkEvent(date: now, milliliters: milliliters, source: source)
+    }
+
+    /// Une preuve par caméra a échoué.
+    public mutating func recordRefusal(at now: Date) {
+        rollOverIfNeeded(now)
+        state.consecutiveRefusals += 1
+    }
+
+    /// Sans caméra utilisable, ou après 3 refus d'affilée, on peut déclarer à la main contre un joker.
+    public func canDeclareManually(at now: Date, cameraAvailable: Bool) -> Bool {
+        let refusals = calendar.isDate(state.day, inSameDayAs: now) ? state.consecutiveRefusals : 0
+        let jokers = calendar.isDate(state.day, inSameDayAs: now) ? state.jokersLeft : settings.jokersPerDay
+        return jokers > 0 && (!cameraAvailable || refusals >= Self.refusalsBeforeManual)
+    }
+
+    public static let refusalsBeforeManual = 3
+
+    /// Déclare une gorgée sans preuve, payée par un joker. `nil` si ce n'est pas permis.
+    @discardableResult
+    public mutating func declareManually(_ milliliters: Int, at now: Date, cameraAvailable: Bool) -> DrinkEvent? {
+        rollOverIfNeeded(now)
+        guard canDeclareManually(at: now, cameraAvailable: cameraAvailable) else { return nil }
+        state.jokersLeft -= 1
+        return recordDrink(milliliters, source: .manual, at: now)
     }
 
     /// 0 = écran intact, 1 = inutilisable.

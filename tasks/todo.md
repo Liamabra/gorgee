@@ -42,7 +42,17 @@ Plan validé : `~/.claude/plans/j-ai-envie-de-cr-er-snug-bee-of-c17f7770-8f82-4b
 - [ ] « Quitter » protégé : refusé sans la phrase, accepté avec
 
 ## M2 — Preuve par caméra
-- [ ] (à détailler au début du jalon)
+- [x] Prototype Foundation Models : disponible, vision active, ~0,9 s par image ; couleur juste (eau / cola / jus), niveau non fiable sur photos web
+- [x] Prototype caméras : seule la FaceTime intégrée (`bltn`) ; pas de caméra virtuelle installée pour tester
+- [ ] Machine à états de la gorgée : montrer, boire, reposer, remontrer (TDD)
+- [ ] Refus consécutifs, déclaration manuelle payée par un joker, ancien état toujours lisible (TDD)
+- [ ] Politique caméra : intégrée, USB, Continuity ; le reste refusé (TDD)
+- [ ] Géométrie « main à la bouche + tête inclinée » (TDD)
+- [ ] Cible `GorgeeDetection` : analyse Vision d'une image, juge Foundation Models, relecture de clips
+- [ ] App : session caméra à la demande, panneau de preuve, raccourci ⌃⌥G, ouverture automatique
+- [ ] Suspension de la sécheresse pendant une visio
+- [ ] Permission caméra FR/EN + droit `device.camera` (runtime durci)
+- [ ] Vérification avec les clips de l'utilisateur
 
 ## M3 — Quantité · M4 — Historique · M5 — Widget
 - [ ] (à détailler au début de chaque jalon)
