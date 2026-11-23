@@ -1,0 +1,49 @@
+name: Gorgee
+options:
+  bundleIdPrefix: app.gorgee
+  deploymentTarget:
+    macOS: "27.0"
+  developmentLanguage: fr
+  createIntermediateGroups: true
+configFiles:
+  Debug: Config/Signing.xcconfig
+  Release: Config/Signing.xcconfig
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_HARDENED_RUNTIME: YES
+    SWIFT_EMIT_LOC_STRINGS: YES
+packages:
+  GorgeeKit:
+    path: Packages/GorgeeKit
+targets:
+  Gorgee:
+    type: application
+    platform: macOS
+    sources:
+      - App
+    dependencies:
+      - package: GorgeeKit
+        product: GorgeeCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.gorgee.Gorgee
+        PRODUCT_NAME: Gorgee
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Gorgée
+        INFOPLIST_KEY_LSUIElement: YES
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.healthcare-fitness
+        INFOPLIST_KEY_NSHumanReadableCopyright: "MIT"
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+        SWIFT_APPROACHABLE_CONCURRENCY: YES
+        ENABLE_APP_SANDBOX: NO
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+schemes:
+  Gorgee:
+    build:
+      targets:
+        Gorgee: all
+    run:
+      config: Debug

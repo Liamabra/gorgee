@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# Xcode / XcodeGen (le projet est régénéré depuis project.yml)
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+build/
+DerivedData/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/*/Package.resolved
+
+# Signature locale (ton identifiant d'équipe Apple)
+Config/Local.xcconfig
+
+# Ancienne app Electron, gardée comme référence
+legacy/
+
+# Clips vidéo de test du détecteur (privés)
+Fixtures/clips/
+
+# Outils locaux
+.claude/settings.local.json
+.superpowers/

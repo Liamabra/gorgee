@@ -1,0 +1,10 @@
+// Signature par défaut : locale (ad hoc), aucun compte Apple requis.
+CODE_SIGN_STYLE = Manual
+CODE_SIGN_IDENTITY = -
+DEVELOPMENT_TEAM =
+
+// Pour signer avec ton équipe, crée Config/Local.xcconfig (ignoré par git) :
+//   DEVELOPMENT_TEAM = TON_TEAM_ID
+//   CODE_SIGN_STYLE = Automatic
+//   CODE_SIGN_IDENTITY = Apple Development
+#include? "Local.xcconfig"
