@@ -1,6 +1,7 @@
 import AppKit
 import GorgeeCore
 import Observation
+import OSLog
 import SwiftUI
 
 @Observable
@@ -29,6 +30,7 @@ final class OverlayController {
     static let level = NSWindow.Level(rawValue: NSWindow.Level.mainMenu.rawValue)
 
     let state = OverlayState()
+    private let log = Logger(subsystem: "app.gorgee.Gorgee", category: "overlay")
     private var windows: [NSWindow] = []
     private var appliedBlurRadius = -1
     private var washEnd: Task<Void, Never>?
@@ -113,7 +115,10 @@ final class OverlayController {
         let radius = Self.blurRadius(for: state.severity)
         guard radius != appliedBlurRadius else { return }
         appliedBlurRadius = radius
-        windows.forEach { WindowBlur.apply(radius: radius, to: $0) }
+        for window in windows {
+            let applied = WindowBlur.apply(radius: radius, to: window)
+            log.notice("Flou \(radius) sur la fenêtre \(window.windowNumber) : \(applied ? "appliqué" : "refusé", privacy: .public)")
+        }
     }
 
     /// Le flou n'arrive qu'en deuxième moitié de sécheresse, jusqu'à rendre le texte illisible.

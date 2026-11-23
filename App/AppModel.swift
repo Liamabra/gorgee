@@ -40,6 +40,9 @@ final class AppModel {
         engine = HydrationEngine(settings: settings, state: state)
         hasProfile = savedSettings != nil
         protectionEnabled = Protection.isEnabled
+        #if DEBUG
+        if let scale = DebugOptions.timeScale { timeScale = scale }
+        #endif
     }
 
     func start() {
@@ -143,6 +146,9 @@ final class AppModel {
     private func tick() {
         now = .now
         isUserActive = ActivityMonitor.isUserActive()
+        #if DEBUG
+        if DebugOptions.forceActive { isUserActive = true }
+        #endif
         engine.tick(now: now, isActive: isUserActive, timeScale: timeScale)
         persistState()
         refreshOverlay()
@@ -229,6 +235,16 @@ enum DebugOptions {
     /// `-GorgeeDebugSeverity 0.6` au lancement force la sécheresse affichée.
     static var forcedSeverity: Double? {
         UserDefaults.standard.string(forKey: "GorgeeDebugSeverity").flatMap(Double.init)
+    }
+
+    /// `-GorgeeForceActive YES` : considère l'utilisateur actif même sans saisie (tests automatisés).
+    static var forceActive: Bool {
+        UserDefaults.standard.bool(forKey: "GorgeeForceActive")
+    }
+
+    /// `-GorgeeTimeScale 60` au lancement accélère la dette.
+    static var timeScale: Double? {
+        UserDefaults.standard.string(forKey: "GorgeeTimeScale").flatMap(Double.init)
     }
 }
 #endif
