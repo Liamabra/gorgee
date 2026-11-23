@@ -15,8 +15,8 @@ Plan validé : `~/.claude/plans/j-ai-envie-de-cr-er-snug-bee-of-c17f7770-8f82-4b
 - [x] Moteur de dette : accumulation, plage, gel, plafond, sévérité (TDD)
 - [x] Gorgées : remboursement, « bu ailleurs », changement de jour (TDD)
 - [x] Jokers : pause 15 min (TDD)
-- [ ] Persistance JSON + journal des gorgées (TDD)
-- [ ] Réseau de craquelures déterministe (TDD)
+- [x] Persistance JSON + journal des gorgées (TDD)
+- [x] Réseau de craquelures déterministe (TDD)
 - [ ] Moniteur d'activité (inactivité + session verrouillée)
 - [ ] Overlay : une fenêtre par écran, au-dessus du plein écran, clics traversants
 - [ ] Prototype flou (`CGSSetWindowBackgroundBlurRadius`)
