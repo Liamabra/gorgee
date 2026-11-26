@@ -4,6 +4,20 @@ public enum SipCredit {
     /// pour qu'un geste mimé ne rapporte pas un grand verre.
     public static let gestureOnlyMilliliters = 100
 
+    /// Quantités courantes proposées après une gorgée vérifiée.
+    public static let presets = [100, 150, 250, 330, 500]
+
+    /// Ce que l'utilisateur peut déclarer après une gorgée vérifiée : jamais plus que son verre.
+    /// La caméra vérifie qu'il boit de l'eau ; la quantité, elle, est déclarée (lecture du niveau trop imprécise).
+    public static func choices(capacity: Int, gestureOnly: Bool) -> [Int] {
+        guard !gestureOnly else { return [gestureOnlyMilliliters] }
+        var choices = presets.filter { $0 <= capacity }
+        if capacity > 0, choices.last != capacity {
+            choices.append(capacity)
+        }
+        return choices
+    }
+
     /// Contenance × baisse du niveau en quarts. Si aucune baisse n'est visible (lecture imprécise),
     /// le geste vérifié vaut tout de même un quart de verre.
     public static func milliliters(capacity: Int, beforeQuarters: Int, afterQuarters: Int) -> Int {

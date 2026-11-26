@@ -37,7 +37,7 @@ struct SettingsView: View {
                     in: 100...1500,
                     step: 50
                 )
-                Text("Une gorgée vérifiée crédite la baisse du niveau, au moins un quart de cette contenance.")
+                Text("Après une gorgée vérifiée, tu indiques combien tu as bu, sans dépasser cette contenance.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

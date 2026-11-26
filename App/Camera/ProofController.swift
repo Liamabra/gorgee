@@ -26,14 +26,14 @@ final class ProofController {
     private(set) var status: Status = .idle
     private(set) var drinkProgress = 0.0
     private(set) var lastVerdict: ContainerVerdict?
-    /// Volume crédité par la dernière preuve validée.
+    /// Volume déclaré pour la dernière preuve validée.
     private(set) var creditedMilliliters = 0
+    /// Preuve validée : on attend que l'utilisateur dise combien il a bu.
+    private(set) var awaitingAmount = false
     /// Sans Apple Intelligence, seul le geste est vérifié ; réévalué à chaque preuve.
     private(set) var gestureOnly = !GlassJudge.isAvailable
 
     @ObservationIgnored let camera = CameraController()
-    /// Volume crédité pour des niveaux avant et après donnés, en quarts.
-    @ObservationIgnored var credit: (Int, Int) -> Int = { _, _ in 0 }
     @ObservationIgnored var onVerified: (Int) -> Void = { _ in }
     @ObservationIgnored var onRefused: () -> Void = {}
     @ObservationIgnored private var task: Task<Void, Never>?
@@ -51,6 +51,7 @@ final class ProofController {
         guard !isActive else { return }
         drinkProgress = 0
         lastVerdict = nil
+        awaitingAmount = false
         framesReceived = 0
         gestureOnly = !GlassJudge.isAvailable
         status = .starting
@@ -61,7 +62,16 @@ final class ProofController {
         task?.cancel()
         task = nil
         camera.stop()
+        awaitingAmount = false
         status = .idle
+    }
+
+    /// La quantité bue, choisie par l'utilisateur après une preuve validée.
+    func confirmAmount(_ milliliters: Int) {
+        guard awaitingAmount else { return }
+        awaitingAmount = false
+        creditedMilliliters = milliliters
+        onVerified(milliliters)
     }
 
     /// La caméra ou le juge manquent : déclarer à la main (contre un joker) devient possible.
@@ -151,9 +161,9 @@ final class ProofController {
         case .verified, .refused: break
         }
         status = .finished(finalStep)
-        if case .verified(let before, let after) = finalStep {
-            creditedMilliliters = gestureOnly ? SipCredit.gestureOnlyMilliliters : credit(before, after)
-            onVerified(creditedMilliliters)
+        if case .verified = finalStep {
+            // La caméra a vérifié qu'il s'agit d'eau ; la quantité est déclarée (lecture du niveau trop imprécise).
+            awaitingAmount = true
         } else {
             onRefused()
         }

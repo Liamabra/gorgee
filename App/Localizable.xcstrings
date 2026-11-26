@@ -169,6 +169,22 @@
         }
       }
     },
+    "Après une gorgée vérifiée, tu indiques combien tu as bu, sans dépasser cette contenance." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After a verified sip, you say how much you drank, up to this capacity."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Après une gorgée vérifiée, tu indiques combien tu as bu, sans dépasser cette contenance."
+          }
+        }
+      }
+    },
     "Aucune caméra physique disponible. Tu peux déclarer ta gorgée contre un joker." : {
       "localizations" : {
         "en" : {
@@ -533,6 +549,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gorgée se lance aussi à l'ouverture de session. Pour la désactiver, passe par « Quitter Gorgée »."
+          }
+        }
+      }
+    },
+    "Gorgée validée ! Combien as-tu bu ?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sip verified! How much did you drink?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gorgée validée ! Combien as-tu bu ?"
           }
         }
       }
@@ -1349,22 +1381,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tes changements s'appliqueront demain matin."
-          }
-        }
-      }
-    },
-    "Une gorgée vérifiée crédite la baisse du niveau, au moins un quart de cette contenance." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A verified sip credits the drop in level, at least a quarter of this capacity."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Une gorgée vérifiée crédite la baisse du niveau, au moins un quart de cette contenance."
           }
         }
       }

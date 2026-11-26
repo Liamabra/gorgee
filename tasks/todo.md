@@ -59,7 +59,14 @@ Plan validé : `~/.claude/plans/j-ai-envie-de-cr-er-snug-bee-of-c17f7770-8f82-4b
 ## M3 — Quantité
 - [x] Contenance réglable (lecture tolérante des anciens réglages) (TDD)
 - [x] Volume crédité = contenance × baisse du niveau, au moins un quart de verre (TDD)
-- [ ] Justesse du niveau mesurée sur les clips de l'utilisateur (repli prévu : classifieur Create ML, sinon forfait)
+- [x] A : après une preuve validée, l'utilisateur choisit la quantité bue (100 / 150 / 250 / 330 / 500 mL, plafonnée à la contenance) — remplace le quart de verre par défaut (« 63 mL » faux)
+- [ ] **B : mesurer la quantité avec un modèle entraîné sur le verre de l'utilisateur** (~3–4 h de code + ~1 h de photos)
+  1. Mode « photos du verre » : l'app range les photos par niveau (vide, ¼, ½, ¾, plein) — ~45 min
+  2. Recadrage automatique du verre autour de la main (Vision) — ~1 h, étape risquée (+1–2 h si besoin)
+  3. Classifieur d'images Create ML à 5 niveaux — ~15 min
+  4. Branchement dans la preuve, en remplaçant le niveau lu par Foundation Models (garder `SipCredit.milliliters`) — ~1 h
+  5. Mesure de la précision sur les photos de l'utilisateur et réglages — ~1 h
+  Pistes lues : LCDTC (5 niveaux, verres du quotidien), LabLiquidVolume, YOLOv8 fioles ; éviter Ultralytics (AGPL).
 
 ## M4 — Historique
 - [x] Totaux par jour, série de jours réussis (TDD)
@@ -87,6 +94,8 @@ Plan validé : `~/.claude/plans/j-ai-envie-de-cr-er-snug-bee-of-c17f7770-8f82-4b
 - Ruling: sans baisse de niveau visible, une gorgée vérifiée crédite un quart de la contenance — le modèle lit mal le niveau sur photos — coût si faux : sous-crédit jusqu'à ce que les clips permettent d'affiner.
 - Ruling: la série se mesure avec l'objectif actuel, pas celui de chaque jour passé — l'objectif change rarement — coût si faux : une série recalculée après un changement de poids.
 - Ruling: le widget (M5) est reporté — il exige une identité de signature pour l'App Group, absente — coût si faux : aucun, la jauge de la barre de menus couvre le besoin.
+- Ruling: la quantité est déclarée après une preuve validée (choix de l'utilisateur, option A) — le modèle d'Apple lit mal le niveau — coût si faux : on peut exagérer, dans la limite de la contenance.
+- Ruling: fermer le panneau sans choisir de quantité n'enregistre rien — pas de valeur inventée — coût si faux : une gorgée validée perdue si on ferme trop vite.
 - Ruling: le temps où l'app est morte compte comme actif (plafonné à 60 s par tick) — tuer l'app ne doit pas effacer la dette — coût si faux : quelques mL de trop après un plantage.
 ## Revue finale (agent indépendant, tout le dépôt)
 

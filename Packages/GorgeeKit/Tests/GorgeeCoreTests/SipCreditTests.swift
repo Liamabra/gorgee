@@ -37,3 +37,21 @@ struct SipCreditTests {
         #expect(settings.containerCapacityML == 250)
     }
 }
+
+@Suite("Quantités proposées après une gorgée")
+struct SipChoicesTests {
+    @Test("Les choix ne dépassent pas la contenance du verre", arguments: [
+        (250, [100, 150, 250]),
+        (500, [100, 150, 250, 330, 500]),
+        (400, [100, 150, 250, 330, 400]),
+        (100, [100]),
+    ])
+    func choicesAreCappedByCapacity(capacity: Int, expected: [Int]) {
+        #expect(SipCredit.choices(capacity: capacity, gestureOnly: false) == expected)
+    }
+
+    @Test("En mode geste seul, un seul choix modeste")
+    func gestureOnlyOffersOneSmallChoice() {
+        #expect(SipCredit.choices(capacity: 500, gestureOnly: true) == [SipCredit.gestureOnlyMilliliters])
+    }
+}

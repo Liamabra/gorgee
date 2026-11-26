@@ -59,13 +59,6 @@ final class AppModel {
         if let scale = DebugOptions.timeScale { timeScale = scale }
         #endif
         proofPanel = ProofPanelController(model: self)
-        proof.credit = { [weak self] before, after in
-            SipCredit.milliliters(
-                capacity: self?.settings.containerCapacityML ?? 250,
-                beforeQuarters: before,
-                afterQuarters: after
-            )
-        }
         proof.onVerified = { [weak self] milliliters in self?.recordDrink(milliliters, source: .camera) }
         proof.onRefused = { [weak self] in self?.recordRefusal() }
     }
@@ -82,6 +75,11 @@ final class AppModel {
     var debtFraction: Double { min(1, engine.state.debtML / max(1, settings.unusableML)) }
     /// Calculé depuis le journal, la seule source de vérité des gorgées.
     var drankTodayML: Int { HydrationHistory(events: drinkEvents, calendar: engine.calendar).total(on: now) }
+
+    /// Quantités proposées après une preuve validée, jamais plus que le verre.
+    var sipChoices: [Int] {
+        SipCredit.choices(capacity: settings.containerCapacityML, gestureOnly: proof.gestureOnly)
+    }
 
     /// Les réglages tels qu'ils seront demain (en attente) ou tels qu'ils sont.
     var editedSettings: HydrationSettings { engine.state.pendingSettings ?? engine.settings }

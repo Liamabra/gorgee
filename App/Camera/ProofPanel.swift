@@ -93,6 +93,15 @@ struct ProofView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
 
+            if proof.awaitingAmount {
+                HStack {
+                    ForEach(model.sipChoices, id: \.self) { amount in
+                        Button("\(amount) mL") { proof.confirmAmount(amount) }
+                            .buttonStyle(.borderedProminent)
+                    }
+                }
+            }
+
             HStack {
                 Button("Fermer", action: close)
                 Spacer()
@@ -171,6 +180,7 @@ struct ProofView: View {
         case .judgeUnavailable:
             return "Le modèle d'Apple ne répond pas. Tu peux déclarer ta gorgée contre un joker."
         case .finished(.verified):
+            if proof.awaitingAmount { return "Gorgée validée ! Combien as-tu bu ?" }
             return "Gorgée validée : \(proof.creditedMilliliters) mL. L'eau revient !"
         case .finished(.refused(let reason)):
             return reason.message
