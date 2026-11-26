@@ -28,7 +28,25 @@ enum PreviewRenderer {
             try? png.write(to: directory.appending(path: "drought-\(Int(severity * 100)).png"))
         }
         renderInterface(to: directory)
+        renderDistortion(to: directory, size: size)
         exit(0)
+    }
+
+    /// Le faux bureau passé dans le shader de déformation, comme le serait la capture de l'écran.
+    private static func renderDistortion(to directory: URL, size: CGSize) {
+        let desktop = ImageRenderer(content: FakeDesktop().frame(width: size.width, height: size.height))
+        desktop.scale = 1
+        guard let image = desktop.cgImage, let renderer = DistortionRenderer() else {
+            print("Rendu de déformation impossible (Metal ou bibliothèque de shaders absente)")
+            return
+        }
+        let tiling = MudTiling(width: size.width, height: size.height, seed: 1)
+        for severity in [0.25, 0.5, 0.75, 1.0] {
+            guard let warped = renderer.render(image, tiling: tiling, severity: severity, time: 1.3),
+                  let png = NSBitmapImageRep(cgImage: warped).representation(using: .png, properties: [:])
+            else { continue }
+            try? png.write(to: directory.appending(path: "warp-\(Int(severity * 100)).png"))
+        }
     }
 
     /// Menu et historique, alimentés par 30 jours de gorgées d'exemple dans un dossier temporaire.

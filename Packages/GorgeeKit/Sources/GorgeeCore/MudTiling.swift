@@ -34,6 +34,11 @@ public struct MudTiling: Sendable {
     public let cellSize: Double
     /// Triées par `reveal` croissant.
     public let cells: [MudCell]
+    /// Les mêmes plaques rangées ligne par ligne sur la grille des germes : le shader y retrouve
+    /// la plaque d'un pixel en ne regardant que les 3×3 cases voisines.
+    public let grid: [MudCell]
+    public let columns: Int
+    public let rows: Int
 
     public init(width: Double, height: Double, seed: UInt64, cellSize: Double = 72) {
         self.width = width
@@ -43,6 +48,8 @@ public struct MudTiling: Sendable {
 
         let columns = max(1, Int((width / cellSize).rounded()))
         let rows = max(1, Int((height / cellSize).rounded()))
+        self.columns = columns
+        self.rows = rows
         let columnWidth = width / Double(columns)
         let rowHeight = height / Double(rows)
         var sites: [Point2D] = []
@@ -81,6 +88,7 @@ public struct MudTiling: Sendable {
                 cells.append(MudCell(polygon: polygon, site: site, reveal: reveal, shade: random.uniform(0...1)))
             }
         }
+        self.grid = cells
         self.cells = cells.enumerated()
             .sorted { ($0.element.reveal, $0.offset) < ($1.element.reveal, $1.offset) }
             .map(\.element)

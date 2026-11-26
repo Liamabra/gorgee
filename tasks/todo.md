@@ -97,6 +97,16 @@ Plan validé : `~/.claude/plans/j-ai-envie-de-cr-er-snug-bee-of-c17f7770-8f82-4b
 - Ruling: la quantité est déclarée après une preuve validée (choix de l'utilisateur, option A) — le modèle d'Apple lit mal le niveau — coût si faux : on peut exagérer, dans la limite de la contenance.
 - Ruling: fermer le panneau sans choisir de quantité n'enregistre rien — pas de valeur inventée — coût si faux : une gorgée validée perdue si on ferme trop vite.
 - Ruling: le temps où l'app est morte compte comme actif (plafonné à 60 s par tick) — tuer l'app ne doit pas effacer la dette — coût si faux : quelques mL de trop après un plantage.
+## M6 — Déformation réelle de l'écran (comme Ghostty Blackhole)
+Décidé le 26/11 : le contenu de l'écran est capturé, tordu puis avalé par le sol sec ; clics et clavier passent toujours ; aucune zone épargnée.
+- [ ] 1. Exposer la grille du sol craquelé pour le GPU (TDD : le germe le plus proche est toujours dans les 3×3 cases voisines) — ~20 min
+- [ ] 2. Shader Metal : éclats de plaques qui décalent le contenu, contenu aspiré dans les fissures, mirage de chaleur, argile qui recouvre — ~1 h 30
+- [ ] 3. Aperçu PNG hors écran sur le faux bureau → **validation du look par l'utilisateur**
+- [ ] 4. Capture ScreenCaptureKit par écran, sans les fenêtres de Gorgée, seulement pendant la sécheresse — ~2 h
+- [ ] 5. Affichage Metal dans l'overlay ; repli sur le rendu peint si la permission est refusée — ~1 h
+- [ ] 6. Permission « Enregistrement de l'écran » (demande, bouton dans le menu), textes FR/EN — ~45 min
+- [ ] 7. Vérification en direct par l'utilisateur (lisibilité, latence, charge GPU)
+
 ## Revue finale (agent indépendant, tout le dépôt)
 
 - Final: fixed proof bloquée après un refus de caméra ou sans caméra — `show()` relance dès qu'aucune preuve ne tourne, « Réessayer » et « Ouvrir les réglages » proposés — vérifié par build (pas de cible de tests UI).

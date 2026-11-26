@@ -94,3 +94,44 @@ struct MudTilingTests {
         #expect(tiling.dryness(of: cell, at: cell.reveal + MudTiling.rampWidth) > 1 - 1e-9)
     }
 }
+
+@Suite("Grille du sol pour le GPU")
+struct MudGridTests {
+    let tiling = MudTiling(width: 1512, height: 982, seed: 42)
+
+    @Test("La grille contient chaque plaque une fois, rangée ligne par ligne")
+    func gridHoldsEveryCell() {
+        #expect(tiling.grid.count == tiling.columns * tiling.rows)
+        #expect(Set(tiling.grid.map(\.site)) == Set(tiling.cells.map(\.site)))
+        let cellWidth = tiling.width / Double(tiling.columns)
+        let cellHeight = tiling.height / Double(tiling.rows)
+        for (index, cell) in tiling.grid.enumerated() {
+            #expect(Int(cell.site.x / cellWidth) == index % tiling.columns)
+            #expect(Int(cell.site.y / cellHeight) == index / tiling.columns)
+        }
+    }
+
+    @Test("Le germe le plus proche est toujours dans les 3×3 cases voisines")
+    func nearestSiteIsInNeighborhood() {
+        var random = SplitMix64(state: 7)
+        let cellWidth = tiling.width / Double(tiling.columns)
+        let cellHeight = tiling.height / Double(tiling.rows)
+        func distance(_ a: Point2D, _ b: Point2D) -> Double { hypot(a.x - b.x, a.y - b.y) }
+        for _ in 0..<2000 {
+            let point = Point2D(x: random.uniform(0...tiling.width), y: random.uniform(0...tiling.height))
+            let global = tiling.grid.min { distance($0.site, point) < distance($1.site, point) }!
+            let column = min(tiling.columns - 1, Int(point.x / cellWidth))
+            let row = min(tiling.rows - 1, Int(point.y / cellHeight))
+            var local: MudCell?
+            for neighborRow in max(0, row - 1)...min(tiling.rows - 1, row + 1) {
+                for neighborColumn in max(0, column - 1)...min(tiling.columns - 1, column + 1) {
+                    let candidate = tiling.grid[neighborRow * tiling.columns + neighborColumn]
+                    if local == nil || distance(candidate.site, point) < distance(local!.site, point) {
+                        local = candidate
+                    }
+                }
+            }
+            #expect(local?.site == global.site)
+        }
+    }
+}
