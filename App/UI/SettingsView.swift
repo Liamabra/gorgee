@@ -54,7 +54,7 @@ struct SettingsView: View {
 
             Section("Sécheresse") {
                 Stepper("Premiers signes à \(Int(model.editedSettings.firstSignsML)) mL", value: firstSigns, in: 50...2950, step: 50)
-                Stepper("Inutilisable à \(Int(model.editedSettings.unusableML)) mL", value: unusable, in: 100...3000, step: 50)
+                Stepper("Sécheresse maximale à \(Int(model.editedSettings.unusableML)) mL", value: unusable, in: 100...3000, step: 50)
             }
 
             Section("Protection") {

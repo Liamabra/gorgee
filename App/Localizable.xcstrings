@@ -713,22 +713,6 @@
         }
       }
     },
-    "Inutilisable à %lld mL" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unusable at %lld mL"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inutilisable à %lld mL"
-          }
-        }
-      }
-    },
     "J'ai vraiment bu…" : {
       "localizations" : {
         "en" : {
@@ -1417,6 +1401,38 @@
         }
       }
     },
+    "Sécheresse maximale" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maximum drought"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sécheresse maximale"
+          }
+        }
+      }
+    },
+    "Sécheresse maximale à %lld mL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maximum drought at %lld mL"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sécheresse maximale à %lld mL"
+          }
+        }
+      }
+    },
     "Série" : {
       "localizations" : {
         "en" : {
@@ -1493,22 +1509,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Écran intact"
-          }
-        }
-      }
-    },
-    "Écran inutilisable" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Screen unusable"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Écran inutilisable"
           }
         }
       }

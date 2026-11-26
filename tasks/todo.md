@@ -99,6 +99,7 @@ Plan validé : `~/.claude/plans/j-ai-envie-de-cr-er-snug-bee-of-c17f7770-8f82-4b
 - Ruling: le shader est compilé au lancement depuis son code source — la compilation au build exige la « Metal Toolchain », téléchargement séparé d'Xcode 27 — coût si faux : ~100 ms au premier affichage, erreurs de shader visibles seulement à l'exécution (couvertes par l'aperçu de debug).
 - Ruling: la zone encore humide reste transparente (vrai écran, sans latence) ; la copie capturée n'apparaît que là où le sol sèche ou dès que le mirage commence (30 %) — coût si faux : le blocage commence un peu plus tard.
 - Ruling: capture en panne ou sans image → retour automatique à l'argile peinte — la sécheresse ne disparaît jamais — coût si faux : aucun.
+- Ruling (demande utilisateur du 26/11) : même au maximum, l'écran reste utilisable mais insupportable — voile d'argile plafonné à 35 %, éclats ~8 pt, mirage 4 pt, flou 3 px max ; « inutilisable » renommé « sécheresse maximale ».
 - Ruling: le temps où l'app est morte compte comme actif (plafonné à 60 s par tick) — tuer l'app ne doit pas effacer la dette — coût si faux : quelques mL de trop après un plantage.
 ## M6 — Déformation réelle de l'écran (comme Ghostty Blackhole)
 Décidé le 26/11 : le contenu de l'écran est capturé, tordu puis avalé par le sol sec ; clics et clavier passent toujours ; aucune zone épargnée.

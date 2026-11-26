@@ -87,7 +87,8 @@ private struct DroughtLayers: View {
         for cell in tiling.revealed(at: severity) {
             let dryness = tiling.dryness(of: cell, at: severity)
             // Même sèche, une plaque laisse deviner l'écran ; elle ne devient opaque qu'à sévérité maximale.
-            let cover = 0.5 + 0.45 * severity
+            // Pénible mais jamais opaque : au maximum, l'écran se lit encore à travers l'argile.
+            let cover = 0.2 + 0.25 * severity
             let points = cell.polygon.map { CGPoint(x: $0.x, y: $0.y) }
             context.fill(Path(polygon: points), with: .color(Palette.crack.opacity(0.9 * dryness * cover)))
 
@@ -95,7 +96,7 @@ private struct DroughtLayers: View {
                 x: points.map(\.x).reduce(0, +) / Double(points.count),
                 y: points.map(\.y).reduce(0, +) / Double(points.count)
             )
-            let gap = 1.2 + 3.0 * dryness
+            let gap = 1.0 + 1.8 * dryness
             let plate = points.map { point in
                 let dx = centroid.x - point.x
                 let dy = centroid.y - point.y

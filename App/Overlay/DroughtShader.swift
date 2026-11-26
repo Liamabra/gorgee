@@ -70,37 +70,37 @@ fragment float4 droughtFragment(VertexOut in [[stage_in]],
 
     // 1. Mirage de chaleur : les lignes ondulent dès 30 % de sécheresse, de plus en plus fort.
     float shimmerLevel = smoothstep(0.3, 1.0, s);
-    float shimmer = 9.0 * shimmerLevel;
+    float shimmer = 4.0 * shimmerLevel;
     float2 offset = float2(sin(p.y * 0.045 + u.time * 2.1) + 0.5 * sin(p.y * 0.11 - u.time * 3.3),
                            0.35 * sin(p.x * 0.05 + u.time * 1.7)) * shimmer;
 
     // 2. Éclats : chaque plaque sèche décale son morceau d'écran dans sa propre direction.
     float angle = plate.shade * 6.2831853;
-    offset += float2(cos(angle), sin(angle)) * dryness * u.cellSize.x * 0.32;
+    offset += float2(cos(angle), sin(angle)) * dryness * u.cellSize.x * 0.11;
 
     // 3. Fissures : le contenu proche du bord est aspiré vers l'intérieur de la plaque.
     float2 inward = normalize(plate.position - p + 1e-4);
-    offset += inward * dryness * smoothstep(14.0, 0.0, edge) * 12.0;
+    offset += inward * dryness * smoothstep(10.0, 0.0, edge) * 5.0;
 
     float4 content = screen.sample(linearSampler, (p + offset) / u.viewSize);
 
     // Couleurs qui fanent vers le sable.
     float gray = dot(content.rgb, float3(0.299, 0.587, 0.114));
     float3 sand = float3(0.80, 0.64, 0.42);
-    float3 color = mix(content.rgb, mix(float3(gray), sand, 0.5), dryness * 0.65);
+    float3 color = mix(content.rgb, mix(float3(gray), sand, 0.5), dryness * 0.45);
 
-    // 4. L'argile recouvre : jusqu'à 95 % à sévérité maximale.
+    // 4. Un voile d'argile : 35 % au maximum, le contenu reste lisible en se forçant.
     float3 clayDark = float3(0.72, 0.55, 0.36);
     float3 clayLight = float3(0.87, 0.75, 0.56);
     float bulge = 1.0 - smoothstep(0.0, u.cellSize.x * 0.6, d1); // plaque bombée, plus claire au centre
     float3 clay = mix(mix(clayDark, clayLight, plate.shade * 0.6), clayLight, bulge * 0.5);
-    float cover = dryness * dryness * (0.25 + 0.70 * s);
+    float cover = dryness * dryness * (0.10 + 0.25 * s);
     color = mix(color, clay, cover);
 
     // Fissure sombre entre les plaques.
-    float crackWidth = 1.0 + 3.0 * dryness;
-    float crack = (1.0 - smoothstep(crackWidth, crackWidth + 1.5, edge)) * dryness;
-    color = mix(color, float3(0.24, 0.15, 0.08), crack * 0.9);
+    float crackWidth = 0.8 + 1.7 * dryness;
+    float crack = (1.0 - smoothstep(crackWidth, crackWidth + 1.2, edge)) * dryness;
+    color = mix(color, float3(0.24, 0.15, 0.08), crack * 0.75);
 
     // Là où rien ne bouge encore, on laisse voir le vrai écran (pas de latence).
     float active = max(step(1e-4, dryness), step(1e-4, shimmerLevel));

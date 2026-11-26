@@ -2,7 +2,7 @@
 
 *A macOS menu-bar app that dries out your screen until you drink a glass of water.*
 
-Gorgée assèche ton écran tant que tu n'as pas bu. Plus tu travailles sans boire, plus il se couvre de sable, de craquelures et de poussière, jusqu'à devenir inutilisable. Bois un verre d'eau devant la caméra et l'eau ruisselle pour tout réparer.
+Gorgée assèche ton écran tant que tu n'as pas bu. Plus tu travailles sans boire, plus il se couvre de sable, de craquelures et de poussière, jusqu'à devenir insupportable (mais jamais bloquant). Bois un verre d'eau devant la caméra et l'eau ruisselle pour tout réparer.
 
 Inspiré de [Ghostty Blackhole](https://github.com/s0xDk/ghostty-blackhole), version hydratation.
 
@@ -14,7 +14,7 @@ Le build Debug sert au développement : protection anti-fermeture désactivée, 
 
 - **Objectif du jour** : `max(2,5 L homme / 2 L femme, poids × 35 mL homme / 31 mL femme)`.
 - **Dette** : elle monte pendant que tu utilises activement le Mac dans ta plage horaire (8 h – 22 h par défaut), au rythme de ton objectif. Elle est gelée quand tu t'absentes et remise à zéro chaque matin.
-- **Sécheresse** : premiers signes à 250 mL de dette, écran inutilisable à 750 mL. Comme dans Ghostty Blackhole, le contenu de ton écran est réellement avalé : il ondule, se brise en éclats le long des fissures, puis disparaît sous l'argile. Rien n'est ralenti et tes clics passent toujours au travers.
+- **Sécheresse** : premiers signes à 250 mL de dette, maximum à 750 mL. Comme dans Ghostty Blackhole, le contenu de ton écran est réellement déformé : il ondule, se brise en éclats le long des fissures, sous un voile d'argile. Même au maximum l'écran reste utilisable, juste insupportable. Rien n'est ralenti et tes clics passent toujours au travers.
 - **Enregistrement de l'écran** : c'est ce qui permet de déformer le vrai contenu. La capture ne tourne que pendant la sécheresse, les images ne sont ni gardées ni envoyées. Sans cette permission, l'argile est simplement peinte par-dessus.
 - **Preuve** : ⌃⌥G (ou le menu) ouvre la caméra ; elle s'ouvre aussi seule quand la sécheresse s'aggrave. Montre ton verre d'eau, bois tête inclinée, repose-le, remontre-le, puis indique combien tu as bu (jamais plus que la contenance de ton verre). Vision et le modèle embarqué d'Apple jugent le geste et la couleur du liquide : tout se passe sur ton Mac, aucune image n'est envoyée ni enregistrée.
 - **Visio** : quand une autre app utilise la caméra, la sécheresse attend (la dette, elle, continue).

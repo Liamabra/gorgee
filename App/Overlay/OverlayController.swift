@@ -177,9 +177,9 @@ final class OverlayController {
         }
     }
 
-    /// Le flou n'arrive qu'en deuxième moitié de sécheresse, jusqu'à rendre le texte illisible.
+    /// Un léger flou en deuxième moitié de sécheresse : fatigant à lire, jamais illisible.
     static func blurRadius(for severity: Double) -> Int {
-        severity <= 0.35 ? 0 : Int(((severity - 0.35) / 0.65 * 20).rounded())
+        severity <= 0.5 ? 0 : Int(((severity - 0.5) / 0.5 * 3).rounded())
     }
 }
 

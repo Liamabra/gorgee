@@ -109,7 +109,7 @@ extension DroughtPhase {
         case .intact: "Écran intact"
         case .drying: "Ça commence à sécher"
         case .drought: "Sécheresse"
-        case .unusable: "Écran inutilisable"
+        case .unusable: "Sécheresse maximale"
         }
     }
 
