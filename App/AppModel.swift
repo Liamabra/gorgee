@@ -11,6 +11,8 @@ final class AppModel {
     private(set) var hasProfile: Bool
     private(set) var now = Date.now
     private(set) var isUserActive = true
+    /// Permission « Enregistrement de l'écran », nécessaire à la vraie déformation.
+    private(set) var screenCaptureAllowed = ScreenCaptureManager.hasPermission
     private(set) var protectionEnabled: Bool
     /// Toutes les gorgées, chargées depuis le journal puis complétées au fil de l'eau.
     private(set) var drinkEvents: [DrinkEvent]
@@ -205,6 +207,38 @@ final class AppModel {
         refreshOverlay()
     }
 
+    /// La sécheresse avale-t-elle réellement l'écran (capture déformée) ?
+    var deformationActive: Bool { overlay.state.deformationActive }
+
+    func openScreenCaptureSettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
+    /// Relance l'app, souvent nécessaire pour que macOS applique une permission d'enregistrement de l'écran.
+    func restart() {
+        persistState()
+        if LaunchAgent.isRunningAsAgent {
+            // Sortie non nulle : launchd relance Gorgée quelques secondes plus tard.
+            exit(1)
+        }
+        let relaunch = Process()
+        relaunch.executableURL = URL(filePath: "/bin/sh")
+        relaunch.arguments = ["-c", "sleep 1; /usr/bin/open \"$0\"", Bundle.main.bundlePath]
+        try? relaunch.run()
+        quitAuthorized = true
+        NSApp.terminate(nil)
+    }
+
+    /// À la première sécheresse, macOS demande une fois l'accès à l'enregistrement de l'écran.
+    private func requestScreenCaptureIfNeeded() {
+        let key = "screenCaptureRequested"
+        guard displaySeverity > 0, !screenCaptureAllowed, !UserDefaults.standard.bool(forKey: key) else { return }
+        UserDefaults.standard.set(true, forKey: key)
+        ScreenCaptureManager.requestPermission()
+    }
+
     func openSettings() {
         SettingsWindowController.shared.show(model: self)
     }
@@ -263,8 +297,10 @@ final class AppModel {
         #endif
         engine.tick(now: now, isActive: isUserActive, timeScale: timeScale)
         persistState()
+        screenCaptureAllowed = ScreenCaptureManager.hasPermission
         overlay.setAnimating(isUserActive)
         refreshOverlay()
+        requestScreenCaptureIfNeeded()
         openProofIfDroughtWorsened()
     }
 

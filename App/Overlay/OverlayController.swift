@@ -10,6 +10,8 @@ final class OverlayState {
     var wash: Wash?
     /// La poussière ne s'anime que si quelqu'un regarde : pas d'animation pendant l'absence.
     var animating = true
+    /// Vrai quand l'écran capturé est réellement déformé ; sinon l'argile est peinte par-dessus.
+    var deformationActive = false
 }
 
 /// L'eau qui ruisselle après une gorgée, de l'ancienne sévérité à la nouvelle.
@@ -23,6 +25,12 @@ struct Wash: Equatable {
     func progress(at date: Date) -> Double {
         min(1, max(0, date.timeIntervalSince(start) / Self.duration))
     }
+
+    /// La sécheresse recule vite puis ralentit, pendant que l'eau ruisselle.
+    func severity(at date: Date) -> Double {
+        let eased = 1 - pow(1 - progress(at: date), 3)
+        return from + (to - from) * eased
+    }
 }
 
 /// Une fenêtre transparente par écran, au-dessus de tout (plein écran compris), que les clics traversent.
@@ -34,10 +42,15 @@ final class OverlayController {
     let state = OverlayState()
     private let log = Logger(subsystem: "app.gorgee.Gorgee", category: "overlay")
     private var windows: [NSWindow] = []
+    private var distortionViews: [DistortionView] = []
     private var appliedBlurRadius = -1
     private var washEnd: Task<Void, Never>?
+    private let capture = ScreenCaptureManager()
+    private let renderer = DistortionRenderer()
 
     init() {
+        capture.onReady = { [weak self] in self?.setDeformation(active: true) }
+        capture.onFailure = { [weak self] in self?.setDeformation(active: false) }
         NotificationCenter.default.addObserver(
             forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main
         ) { [weak self] _ in
@@ -54,6 +67,18 @@ final class OverlayController {
     func setAnimating(_ animating: Bool) {
         guard state.animating != animating else { return }
         state.animating = animating
+        // Personne ne regarde : la copie déformée se rafraîchit à peine.
+        distortionViews.forEach { $0.preferredFramesPerSecond = animating ? 30 : 4 }
+    }
+
+    /// La déformation réelle est possible : Metal disponible et enregistrement de l'écran autorisé.
+    var canDeform: Bool { renderer != nil && ScreenCaptureManager.hasPermission }
+
+    private func setDeformation(active: Bool) {
+        state.deformationActive = active
+        distortionViews.forEach { $0.isPaused = !(active && isVisible) }
+        appliedBlurRadius = -1
+        applyBlur()
     }
 
     func wash(from: Double, to: Double) {
@@ -74,18 +99,26 @@ final class OverlayController {
     private func syncWindows() {
         guard isVisible else {
             windows.forEach { $0.orderOut(nil) }
+            capture.stop()
+            setDeformation(active: false)
             return
         }
         if windows.isEmpty { rebuildWindows() }
         for window in windows where !window.isVisible {
             window.orderFrontRegardless()
         }
+        if canDeform, !capture.isRunning { capture.start() }
         applyBlur()
     }
 
     private func rebuildWindows() {
         windows.forEach { $0.close() }
+        distortionViews = []
+        let restartCapture = capture.isRunning
+        capture.stop()
+        setDeformation(active: false)
         windows = NSScreen.screens.map(makeWindow)
+        if restartCapture, canDeform { capture.start() }
         appliedBlurRadius = -1
         if isVisible {
             windows.forEach { $0.orderFrontRegardless() }
@@ -111,15 +144,31 @@ final class OverlayController {
         window.animationBehavior = .none
 
         let tiling = MudTiling(width: screen.frame.width, height: screen.frame.height, seed: UInt64(screen.displayID))
+        let bounds = CGRect(origin: .zero, size: screen.frame.size)
+        let container = NSView(frame: bounds)
+        // Dessous : la copie déformée de l'écran ; dessus : poussière, eau, ou argile peinte en repli.
+        let displayID = screen.displayID
+        if let renderer, let distortion = DistortionView(
+            frame: bounds, renderer: renderer, tiling: tiling, state: state,
+            frameSource: { [weak self] in self?.capture.latestFrame(for: displayID) }
+        ) {
+            distortion.autoresizingMask = [.width, .height]
+            container.addSubview(distortion)
+            distortionViews.append(distortion)
+        }
         let hosting = NSHostingView(rootView: DroughtView(state: state, tiling: tiling))
         hosting.sizingOptions = []
-        window.contentView = hosting
+        hosting.frame = bounds
+        hosting.autoresizingMask = [.width, .height]
+        container.addSubview(hosting)
+        window.contentView = container
         window.setFrame(screen.frame, display: false)
         return window
     }
 
     private func applyBlur() {
-        let radius = Self.blurRadius(for: state.severity)
+        // La déformation réelle brouille déjà le contenu : pas de flou par-dessus.
+        let radius = state.deformationActive ? 0 : Self.blurRadius(for: state.severity)
         guard radius != appliedBlurRadius else { return }
         appliedBlurRadius = radius
         for window in windows {

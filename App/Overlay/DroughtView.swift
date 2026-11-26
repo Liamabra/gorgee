@@ -10,15 +10,19 @@ struct DroughtView: View {
         Group {
             if let wash = state.wash {
                 TimelineView(.animation) { timeline in
-                    let progress = wash.progress(at: timeline.date)
-                    let eased = 1 - pow(1 - progress, 3)
                     ZStack {
-                        DroughtLayers(severity: wash.from + (wash.to - wash.from) * eased, tiling: tiling, animating: false)
-                        WaterWashLayer(progress: progress)
+                        DroughtLayers(
+                            severity: wash.severity(at: timeline.date), tiling: tiling,
+                            animating: false, paintsMud: !state.deformationActive
+                        )
+                        WaterWashLayer(progress: wash.progress(at: timeline.date))
                     }
                 }
             } else {
-                DroughtLayers(severity: state.severity, tiling: tiling, animating: state.animating)
+                DroughtLayers(
+                    severity: state.severity, tiling: tiling,
+                    animating: state.animating, paintsMud: !state.deformationActive
+                )
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -41,12 +45,16 @@ private struct DroughtLayers: View {
     let severity: Double
     let tiling: MudTiling
     let animating: Bool
+    /// Faux quand la vraie déformation de l'écran dessine déjà l'argile.
+    let paintsMud: Bool
 
     var body: some View {
         ZStack {
-            Canvas { context, size in
-                drawHaze(in: &context, size: size)
-                drawMud(in: &context)
+            if paintsMud {
+                Canvas { context, size in
+                    drawHaze(in: &context, size: size)
+                    drawMud(in: &context)
+                }
             }
             if Int(DustLayer.maxGrains * severity) > 0 {
                 DustLayer(severity: severity, animating: animating)

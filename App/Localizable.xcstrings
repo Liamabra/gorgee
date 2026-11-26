@@ -217,6 +217,38 @@
         }
       }
     },
+    "Autorise l'enregistrement de l'écran pour que la sécheresse avale vraiment ton écran. Les images ne sont ni gardées ni envoyées." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow screen recording so the drought really swallows your screen. Images are never kept or sent."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autorise l'enregistrement de l'écran pour que la sécheresse avale vraiment ton écran. Les images ne sont ni gardées ni envoyées."
+          }
+        }
+      }
+    },
+    "Autoriser…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoriser…"
+          }
+        }
+      }
+    },
     "Bois, tête inclinée" : {
       "localizations" : {
         "en" : {
@@ -373,6 +405,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Début"
+          }
+        }
+      }
+    },
+    "Déformation de l'écran désactivée" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screen distortion is off"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déformation de l'écran désactivée"
           }
         }
       }
@@ -1173,6 +1221,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recopie cette phrase pour pouvoir quitter :"
+          }
+        }
+      }
+    },
+    "Redémarrer Gorgée" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart Gorgée"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redémarrer Gorgée"
           }
         }
       }

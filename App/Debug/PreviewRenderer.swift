@@ -42,8 +42,18 @@ enum PreviewRenderer {
         }
         let tiling = MudTiling(width: size.width, height: size.height, seed: 1)
         for severity in [0.25, 0.5, 0.75, 1.0] {
+            // Comme à l'écran : la copie déformée par-dessus le vrai bureau.
             guard let warped = renderer.render(image, tiling: tiling, severity: severity, time: 1.3),
-                  let png = NSBitmapImageRep(cgImage: warped).representation(using: .png, properties: [:])
+                  let context = CGContext(
+                      data: nil, width: image.width, height: image.height, bitsPerComponent: 8, bytesPerRow: 0,
+                      space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+                  )
+            else { continue }
+            let rect = CGRect(x: 0, y: 0, width: image.width, height: image.height)
+            context.draw(image, in: rect)
+            context.draw(warped, in: rect)
+            guard let composed = context.makeImage(),
+                  let png = NSBitmapImageRep(cgImage: composed).representation(using: .png, properties: [:])
             else { continue }
             try? png.write(to: directory.appending(path: "warp-\(Int(severity * 100)).png"))
         }

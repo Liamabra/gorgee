@@ -96,15 +96,18 @@ Plan validé : `~/.claude/plans/j-ai-envie-de-cr-er-snug-bee-of-c17f7770-8f82-4b
 - Ruling: le widget (M5) est reporté — il exige une identité de signature pour l'App Group, absente — coût si faux : aucun, la jauge de la barre de menus couvre le besoin.
 - Ruling: la quantité est déclarée après une preuve validée (choix de l'utilisateur, option A) — le modèle d'Apple lit mal le niveau — coût si faux : on peut exagérer, dans la limite de la contenance.
 - Ruling: fermer le panneau sans choisir de quantité n'enregistre rien — pas de valeur inventée — coût si faux : une gorgée validée perdue si on ferme trop vite.
+- Ruling: le shader est compilé au lancement depuis son code source — la compilation au build exige la « Metal Toolchain », téléchargement séparé d'Xcode 27 — coût si faux : ~100 ms au premier affichage, erreurs de shader visibles seulement à l'exécution (couvertes par l'aperçu de debug).
+- Ruling: la zone encore humide reste transparente (vrai écran, sans latence) ; la copie capturée n'apparaît que là où le sol sèche ou dès que le mirage commence (30 %) — coût si faux : le blocage commence un peu plus tard.
+- Ruling: capture en panne ou sans image → retour automatique à l'argile peinte — la sécheresse ne disparaît jamais — coût si faux : aucun.
 - Ruling: le temps où l'app est morte compte comme actif (plafonné à 60 s par tick) — tuer l'app ne doit pas effacer la dette — coût si faux : quelques mL de trop après un plantage.
 ## M6 — Déformation réelle de l'écran (comme Ghostty Blackhole)
 Décidé le 26/11 : le contenu de l'écran est capturé, tordu puis avalé par le sol sec ; clics et clavier passent toujours ; aucune zone épargnée.
-- [ ] 1. Exposer la grille du sol craquelé pour le GPU (TDD : le germe le plus proche est toujours dans les 3×3 cases voisines) — ~20 min
-- [ ] 2. Shader Metal : éclats de plaques qui décalent le contenu, contenu aspiré dans les fissures, mirage de chaleur, argile qui recouvre — ~1 h 30
-- [ ] 3. Aperçu PNG hors écran sur le faux bureau → **validation du look par l'utilisateur**
-- [ ] 4. Capture ScreenCaptureKit par écran, sans les fenêtres de Gorgée, seulement pendant la sécheresse — ~2 h
-- [ ] 5. Affichage Metal dans l'overlay ; repli sur le rendu peint si la permission est refusée — ~1 h
-- [ ] 6. Permission « Enregistrement de l'écran » (demande, bouton dans le menu), textes FR/EN — ~45 min
+- [x] 1. Exposer la grille du sol craquelé pour le GPU (TDD : le germe le plus proche est toujours dans les 3×3 cases voisines) — ~20 min
+- [x] 2. Shader Metal : éclats de plaques qui décalent le contenu, contenu aspiré dans les fissures, mirage de chaleur, argile qui recouvre — ~1 h 30
+- [x] 3. Aperçu PNG hors écran sur le faux bureau (`-GorgeeRenderPreview`, fichiers `warp-*.png`) — look à valider par l'utilisateur
+- [x] 4. Capture ScreenCaptureKit par écran, sans les fenêtres de Gorgée, seulement pendant la sécheresse — ~2 h
+- [x] 5. Affichage Metal dans l'overlay ; repli sur le rendu peint si la permission est refusée — ~1 h
+- [x] 6. Permission « Enregistrement de l'écran » (demande, bouton dans le menu), textes FR/EN — ~45 min
 - [ ] 7. Vérification en direct par l'utilisateur (lisibilité, latence, charge GPU)
 
 ## Revue finale (agent indépendant, tout le dépôt)

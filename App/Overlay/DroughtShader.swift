@@ -68,8 +68,9 @@ fragment float4 droughtFragment(VertexOut in [[stage_in]],
     float dryness = s >= 1 ? 1 : clamp((s - plate.reveal) / u.rampWidth, 0.0, 1.0);
     float edge = (d2 - d1) * 0.5; // distance approximative à la fissure
 
-    // 1. Mirage de chaleur : les lignes ondulent, de plus en plus fort.
-    float shimmer = 9.0 * pow(s, 1.5);
+    // 1. Mirage de chaleur : les lignes ondulent dès 30 % de sécheresse, de plus en plus fort.
+    float shimmerLevel = smoothstep(0.3, 1.0, s);
+    float shimmer = 9.0 * shimmerLevel;
     float2 offset = float2(sin(p.y * 0.045 + u.time * 2.1) + 0.5 * sin(p.y * 0.11 - u.time * 3.3),
                            0.35 * sin(p.x * 0.05 + u.time * 1.7)) * shimmer;
 
@@ -101,7 +102,9 @@ fragment float4 droughtFragment(VertexOut in [[stage_in]],
     float crack = (1.0 - smoothstep(crackWidth, crackWidth + 1.5, edge)) * dryness;
     color = mix(color, float3(0.24, 0.15, 0.08), crack * 0.9);
 
-    return float4(color, 1.0);
+    // Là où rien ne bouge encore, on laisse voir le vrai écran (pas de latence).
+    float active = max(step(1e-4, dryness), step(1e-4, shimmerLevel));
+    return float4(color * active, active);
 }
 """
 }

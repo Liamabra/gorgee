@@ -65,6 +65,20 @@ struct MenuView: View {
                 }
             }
 
+            if !model.screenCaptureAllowed {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Déformation de l'écran désactivée").font(.caption.bold())
+                    Text("Autorise l'enregistrement de l'écran pour que la sécheresse avale vraiment ton écran. Les images ne sont ni gardées ni envoyées.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                    HStack {
+                        Button("Autoriser…") { model.openScreenCaptureSettings() }
+                        Button("Redémarrer Gorgée") { model.restart() }
+                    }
+                }
+            }
+
             Divider()
 
             HStack {
